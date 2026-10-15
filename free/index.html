@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Homework Buddy Free</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Homework Buddy">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#8B6CFF">
+<meta name="color-scheme" content="light dark">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F1ECFF; --bg2:#FFE9F4; --card:#FFFFFF; --ink:#2E1A47; --soft:#6E5A8A;
+  --grape:#7B5CFF; --bubble:#FF5FA8; --grape-d:#5B3FD6; --bubble-d:#D63E86; --addtext:#fff; --ring:linear-gradient(160deg,#B9A6FF,#FFB3D6); --alarm2:#3B1F8F; --mint:#1FBF9F; --sun:#FFC23C; --line:#E4DBFA;
+  --danger:#FF5C5C; --shadow:0 6px 0 rgba(46,26,71,.08);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#1B1230; --bg2:#2A1636; --card:#2A1F45; --ink:#F6F0FF; --soft:#BBA9DA;
+    --line:#3D2F63; --shadow:0 6px 0 rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1B1230; --bg2:#2A1636; --card:#2A1F45; --ink:#F6F0FF; --soft:#BBA9DA;
+  --line:#3D2F63; --shadow:0 6px 0 rgba(0,0,0,.25);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0; min-height:100%;
+  font-family:"Baloo Bhaijaan 2","Arial Rounded MT Bold","Segoe UI",system-ui,sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 12% 8%, var(--bg2) 0 180px, transparent 181px),
+    radial-gradient(circle at 92% 30%, var(--bg2) 0 120px, transparent 121px),
+    radial-gradient(var(--line) 1.5px, transparent 1.6px) 0 0/26px 26px,
+    var(--bg);
+  -webkit-tap-highlight-color:transparent;
+}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+input,textarea,select{font:inherit;color:var(--ink)}
+:focus-visible{outline:3px solid var(--grape);outline-offset:3px;border-radius:12px}
+.wrap{max-width:1080px;margin:0 auto;padding:18px 20px 60px}
+
+/* Header */
+.top{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center}
+.hello h1{margin:0;font-size:clamp(34px,6vw,56px);line-height:1;font-weight:800;letter-spacing:-.5px}
+
+.jarbox{display:flex;align-items:center;gap:12px;background:var(--card);border:3px solid var(--line);border-radius:28px;padding:10px 18px 10px 10px;box-shadow:var(--shadow)}
+.jarbox svg{width:78px;height:98px}
+.jarinfo b{display:block;font-size:30px;line-height:1}
+.jarinfo span{font-size:15px;color:var(--soft)}
+.jarinfo .lvl{display:inline-block;margin-top:4px;background:var(--sun);color:#3a2600;border-radius:99px;padding:1px 10px;font-weight:700;font-size:14px}
+.tools{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+.pill{background:var(--card);border:2px solid var(--line);border-radius:99px;padding:6px 14px;font-weight:600;font-size:15px}
+.pill.on{background:var(--grape);color:#fff;border-color:var(--grape)}
+
+/* Tabs */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;gap:6px;margin:22px 0 20px;padding:6px;background:var(--card);border:3px solid var(--line);border-radius:26px;box-shadow:var(--shadow)}
+.tab{flex:1;padding:12px 6px;border-radius:20px;font-weight:700;font-size:18px;display:flex;gap:8px;align-items:center;justify-content:center;color:var(--soft)}
+.tab .ic{font-size:22px}
+.tab[aria-selected="true"]{background:var(--grape);color:#fff}
+.tab .badge{background:var(--bubble);color:var(--addtext);border-radius:99px;font-size:13px;min-width:22px;padding:0 6px;line-height:22px}
+
+h2{font-size:26px;margin:26px 0 12px;font-weight:800}
+h2 small{font-size:16px;color:var(--soft);font-weight:500;margin-left:8px}
+
+/* Big add button */
+.addbig{width:100%;display:flex;align-items:center;gap:16px;padding:18px 22px;border-radius:28px;background:var(--bubble);color:var(--addtext);font-size:24px;font-weight:800;box-shadow:0 7px 0 var(--bubble-d);transition:transform .08s}
+.addbig:active{transform:translateY(4px);box-shadow:0 3px 0 var(--bubble-d)}
+.addbig .plus{width:52px;height:52px;border-radius:50%;background:#fff;color:var(--bubble-d);display:grid;place-items:center;font-size:36px;line-height:1}
+
+/* Class strip */
+.strip{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none}
+.cls{flex:0 0 auto;min-width:110px;background:var(--card);border:3px solid var(--line);border-radius:22px;padding:10px 12px;text-align:left;box-shadow:var(--shadow)}
+.cls .n{font-size:13px;color:var(--soft);font-weight:600}
+.cls .e{font-size:28px;line-height:1.2}
+.cls .s{font-weight:700;font-size:16px;white-space:nowrap}
+.cls.empty{opacity:.55;border-style:dashed}
+
+/* Homework cards */
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.hw{position:relative;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;background:var(--card);border:3px solid var(--line);border-radius:26px;padding:14px 14px 14px 12px;box-shadow:var(--shadow);overflow:hidden}
+.hw::before{content:"";position:absolute;inset:0 auto 0 0;width:8px;background:var(--c)}
+.hw .emo{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;font-size:30px;background:color-mix(in srgb,var(--c) 22%,transparent);margin-left:6px}
+.hw .sub{font-weight:800;font-size:18px;line-height:1.1}
+.hw .txt{font-size:17px;margin:2px 0 6px;overflow-wrap:anywhere;unicode-bidi:plaintext}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:13px;font-weight:600;background:var(--bg);border-radius:99px;padding:2px 10px;color:var(--soft)}
+.chip.late{background:var(--danger);color:#fff}
+.chip.type{background:color-mix(in srgb,var(--c) 18%,var(--bg));color:var(--ink)}
+.chip.exam{background:var(--grape);color:#fff}
+.chip.today{background:var(--sun);color:#3a2600}
+.check{width:52px;height:52px;border-radius:50%;border:4px solid var(--c);display:grid;place-items:center;font-size:26px;color:transparent;transition:transform .1s}
+.check:active{transform:scale(.9)}
+.hw.isdone .check{background:var(--mint);border-color:var(--mint);color:#fff}
+.hw.isdone .txt{text-decoration:line-through;opacity:.7}
+.editbtn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:4px 14px;border-radius:99px;border:2px solid var(--line);background:var(--card);font-weight:700;font-size:15px;color:var(--ink)}
+.editbtn:active{transform:scale(.95)}
+.cardbtns{display:flex;gap:8px;flex-wrap:wrap}
+.editbtn.del{color:var(--danger);border-color:color-mix(in srgb,var(--danger) 45%,var(--line))}
+.hw .check{margin-top:10px}
+
+.empty-state{text-align:center;padding:36px 20px;background:var(--card);border:3px dashed var(--line);border-radius:28px;color:var(--soft);font-size:19px}
+.empty-state .big{font-size:56px}
+
+/* Schedule grid */
+.gridwrap{overflow-x:auto;border-radius:26px}
+.sched{display:grid;grid-template-columns:70px repeat(5,minmax(120px,1fr));gap:8px;min-width:720px}
+.sched .hd{text-align:center;font-weight:800;font-size:18px;padding:8px;border-radius:18px;background:var(--card);border:3px solid var(--line)}
+.sched .hd.now{background:var(--grape);color:#fff;border-color:var(--grape)}
+.sched .pn{display:grid;place-items:center;font-weight:800;font-size:20px;color:var(--soft)}
+.cell{min-height:82px;border-radius:20px;border:3px dashed var(--line);background:color-mix(in srgb,var(--card) 60%,transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:6px;text-align:center;font-weight:700;font-size:15px;position:relative}
+.cell.set{border-style:solid;border-color:var(--c);background:color-mix(in srgb,var(--c) 18%,var(--card))}
+.cell .e{font-size:28px;line-height:1.1}
+.cell .dot{position:absolute;top:6px;right:8px;background:var(--bubble);color:#fff;border-radius:99px;font-size:12px;min-width:20px;line-height:20px}
+.cell .addhint{color:var(--soft);font-size:24px}
+.hintline{color:var(--soft);font-size:16px;margin:0 0 12px}
+
+/* Sheet */
+.scrim{position:fixed;inset:0;background:rgba(30,15,55,.45);z-index:20;display:flex;align-items:flex-end;justify-content:center;animation:fade .15s}
+.sheet{width:min(640px,100%);max-height:calc(100% - 30px);overflow:auto;background:var(--card);border-radius:34px 34px 0 0;padding:22px 22px calc(26px + env(safe-area-inset-bottom,0px));animation:up .22s cubic-bezier(.2,.9,.3,1.2)}
+@media (min-width:700px){.scrim{align-items:center}.sheet{border-radius:34px}}
+.sheet h3{margin:0 0 14px;font-size:28px;font-weight:800}
+.lbl{font-weight:700;font-size:16px;color:var(--soft);margin:16px 0 8px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{border:3px solid var(--line);border-radius:18px;padding:8px 14px;font-weight:700;font-size:16px;background:var(--card)}
+.opt small{display:block;font-size:12px;color:var(--soft);font-weight:600}
+.opt[aria-pressed="true"]{border-color:var(--grape);background:var(--grape);color:#fff}
+.opt[aria-pressed="true"] small{color:#E9E2FF}
+textarea,.field{width:100%;border:3px solid var(--line);border-radius:20px;padding:12px 16px;font-size:19px;background:var(--bg);outline:none}
+textarea:focus,.field:focus{border-color:var(--grape)}
+textarea{min-height:96px;resize:vertical;unicode-bidi:plaintext}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btns{display:flex;gap:10px;margin-top:22px}
+.btn{flex:1;padding:14px;border-radius:20px;font-weight:800;font-size:19px;background:var(--bg);border:3px solid var(--line)}
+.btn.main{background:var(--grape);color:#fff;border-color:var(--grape);box-shadow:0 5px 0 var(--grape-d)}
+.btn.pink{background:var(--bubble);color:var(--addtext);border-color:var(--bubble);box-shadow:0 5px 0 var(--bubble-d)}
+.btn.green{background:var(--mint);color:#fff;border-color:var(--mint);box-shadow:0 5px 0 #14937A}
+.btn.red{color:var(--danger);border-color:var(--danger)}
+.note{font-size:14px;color:var(--soft);margin-top:10px}
+.subjbtn{border:3px solid var(--line);border-radius:18px;padding:6px 12px;font-weight:700;display:flex;gap:6px;align-items:center;background:var(--card)}
+.subjbtn[aria-pressed="true"]{border-color:var(--c);background:color-mix(in srgb,var(--c) 25%,var(--card))}
+.emojis{display:flex;flex-wrap:wrap;gap:6px}
+.emojis button{font-size:26px;width:46px;height:46px;border-radius:14px;border:3px solid transparent}
+.emojis button[aria-pressed="true"]{border-color:var(--grape);background:var(--bg)}
+
+/* Alarm */
+.alarm{position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:20px;background:radial-gradient(circle,var(--grape),var(--alarm2));animation:fade .2s}
+.alarm .box{background:var(--card);border-radius:40px;padding:30px 26px;max-width:520px;width:100%;text-align:center;box-shadow:0 12px 0 rgba(0,0,0,.2)}
+.alarm .ring{font-size:92px;display:inline-block;animation:wiggle .5s ease-in-out infinite}
+.alarm h3{font-size:34px;margin:6px 0 4px;line-height:1.1}
+.alarm p{font-size:21px;margin:0 0 6px;unicode-bidi:plaintext}
+.alarm .btns{flex-direction:column}
+
+/* Splash */
+.splash{position:fixed;inset:0;z-index:50;display:grid;place-items:center;text-align:center;background:linear-gradient(160deg,#7B5CFF,#FF5FA8);color:#fff;padding:20px}
+.splash .star{font-size:120px;display:inline-block;animation:pulse 1.4s ease-in-out infinite;filter:drop-shadow(0 8px 0 rgba(0,0,0,.15))}
+.splash h1{font-size:clamp(40px,8vw,64px);margin:6px 0 0;line-height:1}
+.splash p{font-size:22px;margin:10px 0 0;opacity:.9}
+
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--card);padding:10px 20px;border-radius:99px;font-weight:700;z-index:60;animation:up .2s}
+/* Unicorn buddy */
+.top{grid-template-columns:auto 1fr auto}
+.uni{width:118px;height:118px;flex:0 0 auto;border-radius:50%;background:var(--ring);border:4px solid var(--card);box-shadow:var(--shadow);overflow:hidden;padding:6px 4px 0}
+.uni svg{width:100%;height:100%;display:block;transform-origin:50% 90%}
+.uni.happy svg{animation:hop .5s ease 2}
+.bubble{position:relative;display:inline-block;margin-top:10px;background:var(--card);border:3px solid var(--line);border-radius:22px;padding:8px 16px;font-size:18px;font-weight:600;color:var(--ink);box-shadow:var(--shadow)}
+.bubble::before{content:"";position:absolute;left:-12px;top:14px;border:8px solid transparent;border-right:12px solid var(--line)}
+.bubble b{color:var(--grape-t)}
+.bigUni{width:150px;height:150px;margin:0 auto;display:block}
+.bigUni svg{width:100%;height:100%}
+.alarm .bigUni,.empty-state .bigUni{border-radius:50%;background:var(--ring);overflow:hidden;padding:10px 6px 0}
+.alarm .bigUni svg{animation:wiggle .5s ease-in-out infinite;transform-origin:50% 90%}
+.splash .bigUni{width:210px;height:210px;animation:pulse 1.6s ease-in-out infinite;filter:drop-shadow(0 10px 0 rgba(0,0,0,.15))}
+/* Rewards */
+.rw{background:var(--card);border:3px solid var(--line);border-radius:26px;padding:16px 18px;box-shadow:var(--shadow)}
+.rw .t{display:flex;gap:12px;align-items:center;font-weight:800;font-size:21px}
+.rw .t .e{font-size:38px}
+.rw .t span[dir]{unicode-bidi:plaintext}
+.bar{position:relative;height:30px;border-radius:99px;background:var(--bg);margin:14px 0 6px;border:3px solid var(--line);overflow:visible}
+.bar .fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#FF5FA8,#FFC23C,#1FBF9F,#7BD3FF,#A66CFF);transition:width .6s}
+.bar .run{position:absolute;top:50%;width:46px;height:46px;transform:translate(-50%,-55%);transition:left .6s}
+.bar .run svg{width:100%;height:100%}
+.bar .goal{position:absolute;right:-6px;top:50%;transform:translateY(-50%);font-size:28px}
+.rw .meta{color:var(--soft);font-weight:600;font-size:16px}
+.rw.ready{border-color:var(--sun);background:color-mix(in srgb,var(--sun) 16%,var(--card))}
+.rw.given{opacity:.7}
+.nextrw{display:flex;align-items:center;gap:12px;margin-top:14px;padding:12px 16px;border-radius:22px;background:var(--card);border:3px solid var(--line);font-weight:700;font-size:17px;width:100%;text-align:left}
+.nextrw .e{font-size:30px}
+.pinput{letter-spacing:14px;text-align:center;font-size:32px}
+.pr{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:2px solid var(--line)}
+.pr .e{font-size:28px}.pr .x{flex:1;font-weight:700}
+.pr .x small{display:block;color:var(--soft);font-weight:600}
+.pr .btn{flex:0 0 auto;padding:8px 12px;font-size:15px}
+@keyframes hop{0%,100%{transform:translateY(0)}40%{transform:translateY(-14px) rotate(-6deg)}}
+@media (max-width:640px){.top{grid-template-columns:auto 1fr}.top>div:last-child{grid-column:1/-1}.uni{width:84px;height:84px}}
+.codebox{font-size:40px;font-weight:800;letter-spacing:3px;text-align:center;background:var(--bg);border:3px dashed var(--grape);border-radius:24px;padding:14px;margin:10px 0;direction:ltr;user-select:all}
+.syncok{color:var(--mint);font-weight:800}
+.subrow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:2px solid var(--line)}
+.subrow .e{font-size:28px;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 22%,transparent)}
+.subrow .x{flex:1;font-weight:700;font-size:18px;unicode-bidi:plaintext}
+.subrow .x small{display:block;color:var(--soft);font-weight:600;font-size:13px}
+.mini{padding:6px 12px;border-radius:14px;border:2px solid var(--line);background:var(--card);font-weight:700;font-size:15px}
+.mini.red{color:var(--danger);border-color:var(--danger)}
+.linkbtn{margin-top:10px;font-weight:700;color:var(--grape-t);font-size:16px;padding:4px 0}
+.splash{background:#FFFCF5 !important;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 37px,#DCE3FF 37px,#DCE3FF 39px) !important;color:#22304F !important;display:flex !important;flex-direction:column;align-items:center;justify-content:center;gap:14px;overflow:hidden}
+.splash::before{content:"";position:absolute;left:7%;top:0;bottom:0;width:3px;background:#F9A8BE}
+.splash .blob{position:absolute;border-radius:50%}
+.splash .deco{position:absolute;width:62px;height:62px;border-radius:20px;border:4px solid #fff;box-shadow:0 6px 0 rgba(16,35,63,.08);display:grid;place-items:center;font-size:30px}
+.splash .nbw{position:relative;width:min(320px,62vw);aspect-ratio:1;border-radius:50%;background:#fff;border:6px dashed #F9B8C9;display:grid;place-items:center;animation:pulse 2.4s ease-in-out infinite}
+.splash .nbw svg{width:86%;height:auto}
+.splash h1{position:relative;margin:4px 0 0;font-size:clamp(42px,9vw,64px);line-height:1;color:#22304F}
+.splash h1 span{color:#F2668B}
+.splash p{position:relative;margin:0;font-size:clamp(18px,3.4vw,23px);font-weight:600;color:#5B6485}
+.splash .schips{position:relative;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.splash .schips span{background:#fff;border:3px solid #DCE3FF;border-radius:99px;padding:5px 14px;font-weight:700;font-size:16px;color:#22304F}
+#startBtn{position:relative;margin-top:10px;display:inline-flex;align-items:center;gap:14px;border-radius:99px;padding:16px 40px 16px 18px;background:#7C6CF2;color:#fff;font-size:28px;font-weight:800;box-shadow:0 8px 0 #5B4BD0}
+#startBtn:active{transform:translateY(4px);box-shadow:0 4px 0 #5B4BD0}
+#startBtn .pl{width:48px;height:48px;border-radius:50%;background:#FFD43B;display:grid;place-items:center;color:#22304F;font-size:22px}
+.buddies{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bcard{border:4px solid var(--line);border-radius:26px;padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--card)}
+.bcard[aria-pressed="true"]{border-color:var(--c);background:color-mix(in srgb,var(--c) 16%,var(--card))}
+.bcard .m{width:112px;height:112px;border-radius:50%;overflow:hidden;background:var(--r);padding:8px 5px 0}
+.bcard .m svg{width:100%;height:100%;display:block}
+.bcard b{font-size:22px}
+.bcard .sw{display:flex;gap:5px}.bcard .sw i{width:20px;height:20px;border-radius:7px;display:block}
+.bcard small{font-weight:700;color:var(--soft)}
+.gbtn{flex:1;border:4px solid var(--line);border-radius:24px;padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--card);font-size:20px;font-weight:800}
+.gbtn[aria-pressed="true"]{border-color:#7C6CF2;background:color-mix(in srgb,#7C6CF2 16%,var(--card))}
+.gbtn .ms{display:flex;gap:4px}
+.gbtn .ms span{width:50px;height:50px;border-radius:50%;overflow:hidden;padding:4px 3px 0;border:3px solid #fff}
+.gbtn .ms svg{width:100%;height:100%;display:block}
+.upfoot{display:flex;align-items:center;gap:14px;width:100%;margin-top:34px;padding:16px 18px;border-radius:26px;background:color-mix(in srgb,#FFD43B 18%,var(--card));border:3px solid #FFD43B;box-shadow:0 6px 0 rgba(217,163,0,.25);text-align:left}
+.upfoot .uf-ic{font-size:34px}
+.upfoot .uf-tx{flex:1;display:flex;flex-direction:column}
+.upfoot b{font-size:20px;color:var(--ink)}
+.upfoot small{font-size:14px;font-weight:600;color:var(--soft)}
+.upfoot .uf-go{background:#7C6CF2;color:#fff;border-radius:99px;padding:8px 16px;font-weight:800;white-space:nowrap}
+@media (max-width:640px){.upfoot small{display:none}}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:70}
+
+@keyframes fade{from{opacity:0}}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+@keyframes wiggle{0%,100%{transform:rotate(-14deg)}50%{transform:rotate(14deg)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12) rotate(8deg)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:640px){
+  .top{grid-template-columns:1fr}
+  .tab .tx{display:none}.tab .ic{font-size:26px}
+  .list{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <button class="uni" id="uniHead" aria-label="Talk to your buddy"></button>
+    <div class="hello">
+      <h1 id="hi">Hi!</h1>
+      <div class="bubble"><b id="petName">Buddy</b>: <span id="sub">Let's check your homework.</span></div>
+    </div>
+    <div>
+      <div class="jarbox" aria-label="Star jar">
+        <svg viewBox="0 0 120 150" id="jar" aria-hidden="true"></svg>
+        <div class="jarinfo"><b id="starCount">0</b><span id="collWord">stars earned</span><br><span class="lvl" id="lvl">Seedling</span></div>
+      </div>
+      <div class="tools">
+        <button class="pill" id="syncPill" hidden title="Family sync">☁️</button>
+        <button class="pill" id="wakeBtn" title="Keep the screen on so alarms can ring">🌙 Keep awake</button>
+        <button class="pill" id="setBtn" aria-label="Settings">⚙️</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" data-v="today"><span class="ic">🏠</span><span class="tx">Today</span></button>
+    <button class="tab" role="tab" data-v="schedule"><span class="ic">🗓️</span><span class="tx">Schedule</span></button>
+    <button class="tab" role="tab" data-v="upcoming"><span class="ic">📚</span><span class="tx">Upcoming</span><span class="badge" id="upBadge" hidden></span></button>
+    <button class="tab" role="tab" data-v="done"><span class="ic">⭐</span><span class="tx">Done</span></button>
+  </nav>
+
+  <main id="view"></main>
+  <button class="upfoot" id="upFoot"><span class="uf-ic">⭐</span><span class="uf-tx"><b>Get the full version</b><small>All homework types · 4 buddies · Sounds · Family sync · Parent rewards</small></span><span class="uf-go">Upgrade ➜</span></button>
+</div>
+
+<div class="splash" id="splash">
+  <div class="blob" style="left:-70px;bottom:-90px;width:280px;height:280px;background:#FFE1EA"></div>
+  <div class="blob" style="right:-70px;bottom:70px;width:210px;height:210px;background:#DCF7EE"></div>
+  <div class="deco" style="left:9%;top:6%;background:#FFF3BF;transform:rotate(-10deg)">⭐</div>
+  <div class="deco" style="right:8%;top:9%;background:#E9E6FF;transform:rotate(8deg)">⏰</div>
+  <div class="deco" style="left:6%;top:44%;background:#DCF7EE;transform:rotate(6deg)">✅</div>
+  <div class="deco" style="right:6%;top:40%;background:#FFE1EA;transform:rotate(-8deg)">🔔</div>
+  <div class="nbw"><svg viewBox="0 0 252 262" role="img" aria-label="A smiling notebook holding a pencil"><ellipse cx="116" cy="246" rx="74" ry="9" fill="#10233F" opacity=".12"></ellipse>
+<rect x="84" y="222" width="22" height="18" rx="7" fill="#FF922B" stroke="#10233F" stroke-width="4.5"></rect>
+<rect x="128" y="222" width="22" height="18" rx="7" fill="#FF922B" stroke="#10233F" stroke-width="4.5"></rect>
+<rect x="60" y="44" width="136" height="180" rx="16" fill="#FFFFFF" stroke="#10233F" stroke-width="5"></rect>
+<path d="M186 70 H196 M186 92 H196 M186 114 H196 M186 136 H196" stroke="#A5D8FF" stroke-width="3"></path>
+<path d="M46 150 Q26 136 20 112" fill="none" stroke="#10233F" stroke-width="12" stroke-linecap="round"></path>
+<path d="M46 150 Q26 136 20 112" fill="none" stroke="#FFD43B" stroke-width="6" stroke-linecap="round"></path>
+<circle cx="19" cy="106" r="11" fill="#FFD43B" stroke="#10233F" stroke-width="4.5"></circle>
+<rect x="46" y="38" width="136" height="182" rx="18" fill="#FFD43B" stroke="#10233F" stroke-width="6"></rect>
+<path d="M46 192 H182 V202 Q182 220 164 220 H64 Q46 220 46 202 Z" fill="#FCC419"></path>
+<rect x="46" y="38" width="136" height="182" rx="18" fill="none" stroke="#10233F" stroke-width="6"></rect>
+<rect x="66" y="26" width="9" height="24" rx="4.5" fill="#CED4DA" stroke="#10233F" stroke-width="3.5"></rect><rect x="83" y="26" width="9" height="24" rx="4.5" fill="#CED4DA" stroke="#10233F" stroke-width="3.5"></rect><rect x="100" y="26" width="9" height="24" rx="4.5" fill="#CED4DA" stroke="#10233F" stroke-width="3.5"></rect><rect x="117" y="26" width="9" height="24" rx="4.5" fill="#CED4DA" stroke="#10233F" stroke-width="3.5"></rect><rect x="134" y="26" width="9" height="24" rx="4.5" fill="#CED4DA" stroke="#10233F" stroke-width="3.5"></rect><rect x="151" y="26" width="9" height="24" rx="4.5" fill="#CED4DA" stroke="#10233F" stroke-width="3.5"></rect><rect x="168" y="26" width="9" height="24" rx="4.5" fill="#CED4DA" stroke="#10233F" stroke-width="3.5"></rect>
+<rect x="68" y="64" width="92" height="30" rx="9" fill="#FFFFFF" stroke="#10233F" stroke-width="4"></rect>
+<text x="114" y="87" text-anchor="middle" font-family="Baloo Bhaijaan 2, Trebuchet MS, sans-serif" font-size="20" font-weight="800" fill="#0B7A75">ABC</text>
+<ellipse cx="94" cy="130" rx="11" ry="14" fill="#10233F"></ellipse><ellipse cx="136" cy="130" rx="11" ry="14" fill="#10233F"></ellipse>
+<circle cx="98" cy="124" r="4" fill="#FFFFFF"></circle><circle cx="140" cy="124" r="4" fill="#FFFFFF"></circle>
+<path d="M86 110 Q94 104 102 108 M128 108 Q136 104 144 110" fill="none" stroke="#10233F" stroke-width="4" stroke-linecap="round"></path>
+<path d="M94 156 Q115 182 136 156 Z" fill="#E8590C" stroke="#10233F" stroke-width="4.5" stroke-linejoin="round"></path>
+<path d="M104 166 Q115 176 126 166 Q115 162 104 166 Z" fill="#FFA8A8"></path>
+<ellipse cx="74" cy="152" rx="10" ry="6" fill="#FF8787" opacity=".6"></ellipse><ellipse cx="156" cy="152" rx="10" ry="6" fill="#FF8787" opacity=".6"></ellipse>
+<g transform="rotate(24 214 140)">
+<rect x="206" y="72" width="18" height="16" fill="#FFA8BA" stroke="#10233F" stroke-width="4"></rect>
+<rect x="206" y="86" width="18" height="10" fill="#ADB5BD" stroke="#10233F" stroke-width="4"></rect>
+<rect x="206" y="94" width="18" height="66" fill="#4DABF7" stroke="#10233F" stroke-width="4"></rect>
+<path d="M212 96 V158" stroke="#A5D8FF" stroke-width="3"></path>
+<polygon points="206 160 224 160 215 182" fill="#FFE8CC" stroke="#10233F" stroke-width="4" stroke-linejoin="round"></polygon>
+<polygon points="212 174 218 174 215 182" fill="#10233F"></polygon></g>
+<path d="M182 164 Q196 158 204 146" fill="none" stroke="#10233F" stroke-width="12" stroke-linecap="round"></path>
+<path d="M182 164 Q196 158 204 146" fill="none" stroke="#FFD43B" stroke-width="6" stroke-linecap="round"></path>
+<circle cx="206" cy="144" r="11" fill="#FFD43B" stroke="#10233F" stroke-width="4.5"></circle></svg></div>
+  <h1>Homework <span>Buddy</span></h1>
+  <div style="position:relative;background:#FFD43B;color:#22304F;border-radius:99px;padding:2px 18px;font-weight:800;font-size:18px;margin-top:-4px">FREE</div>
+  <p>Your friendly homework reminder</p>
+  <div class="schips"><span>📅 Schedule</span><span>🔔 Reminders</span><span>⭐ Stars</span></div>
+  <button id="startBtn"><span class="pl">▶</span>Tap to start</button>
+</div>
+<canvas id="confetti"></canvas>
+
+<script>
+/* ---------- Data ---------- */
+const UNI=`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g id="mane" stroke="#2E1A47" stroke-width="4"> <circle cx="84" cy="62" r="17" fill="#FF5FA8"/> <circle cx="64" cy="78" r="18" fill="#A66CFF"/> <circle cx="52" cy="102" r="18" fill="#1FBF9F"/> <circle cx="48" cy="128" r="17" fill="#FFC23C"/> <circle cx="50" cy="154" r="17" fill="#FF5FA8"/> <circle cx="56" cy="180" r="16" fill="#A66CFF"/> <circle cx="98" cy="58" r="12" fill="#A66CFF"/> </g> <g fill="#2E1A47" stroke="#2E1A47" stroke-width="9" stroke-linejoin="round"> <path d="M66 150 Q60 182 70 204 L140 204 Q128 176 124 150 Z"/> <ellipse cx="96" cy="112" rx="50" ry="48"/> <ellipse cx="130" cy="136" rx="34" ry="27"/> <path d="M76 74 L82 40 L100 68 Z"/> </g> <g fill="#FFFFFF"> <path d="M66 150 Q60 182 70 204 L140 204 Q128 176 124 150 Z"/> <ellipse cx="96" cy="112" rx="50" ry="48"/> <ellipse cx="130" cy="136" rx="34" ry="27"/> <path d="M76 74 L82 40 L100 68 Z"/> </g> <path d="M82 66 L84 50 L93 64 Z" fill="#FFB3D6"/> <g stroke="#2E1A47" stroke-width="4.5" stroke-linejoin="round"> <path d="M104 70 L136 10 L122 76 Z" fill="#FFC23C"/> </g> <g stroke="#E09A00" stroke-width="3" stroke-linecap="round"> <path d="M109 62 L124 58"/><path d="M113 48 L128 44"/><path d="M118 34 L131 31"/> </g> <g id="front-mane"> <circle cx="92" cy="72" r="13" fill="#FF5FA8" stroke="#2E1A47" stroke-width="4"/> <circle cx="76" cy="84" r="12" fill="#1FBF9F" stroke="#2E1A47" stroke-width="4"/> </g> <path d="M100 104 Q111 116 122 104" fill="none" stroke="#2E1A47" stroke-width="5" stroke-linecap="round"/> <path d="M101 104 L95 99 M106 109 L102 114 M112 110 L111 117" stroke="#2E1A47" stroke-width="3.5" stroke-linecap="round"/> <ellipse cx="116" cy="126" rx="11" ry="7" fill="#FF8FC4" opacity=".75"/> <circle cx="150" cy="130" r="3.5" fill="#2E1A47"/> <path d="M128 150 Q140 160 152 150" fill="none" stroke="#2E1A47" stroke-width="4" stroke-linecap="round"/></svg>`;
+const TYPES_ALL=[
+ {id:'homework',name:'Homework',emoji:'📝',say:'do your',word:'homework'},
+ {id:'project',name:'Project',emoji:'🧩',say:'work on your',word:'project'},
+ {id:'task',name:'Task',emoji:'✅',say:'do your',word:'task'},
+ {id:'quiz',name:'Quiz',emoji:'❓',say:'study for your',word:'quiz',exam:true},
+ {id:'test',name:'Test',emoji:'📋',say:'study for your',word:'test',exam:true},
+ {id:'reading',name:'Reading',emoji:'📖',say:'do your',word:'reading'},
+ {id:'worksheet',name:'Worksheet',emoji:'📄',say:'do your',word:'worksheet'},
+ {id:'presentation',name:'Presentation',emoji:'🎤',say:'prepare your',word:'presentation'},
+ {id:'other',name:'Other',emoji:'📌',say:'do your',word:'task'}
+];
+const OTHER_COLOR='#FF9F1C';
+const hasArabic=t=>/[\u0600-\u06FF]/.test(t||'');
+function hwLook(h){
+  const s=subj(h.subjectId);
+  if(h.type==='other')return {title:h.otherName||'Task',emoji:s?s.emoji:'📌',color:s?s.color:OTHER_COLOR,subject:s?s.name:''};
+  const f=s||{name:h.subjectName||'Homework',emoji:h.emoji||'📝',color:h.color||'#7B5CFF'};
+  return {title:f.name,emoji:f.emoji,color:f.color,subject:''};
+}
+const nm=()=>state.name||'friend';
+const TYPES=TYPES_ALL.slice(0,1);
+const typ=id=>TYPES.find(t=>t.id===id)||TYPES[0];
+const FREE=true;
+const FULL_URL='https://homeworkbuddy26-crypto.github.io/homework-buddy/full/';
+const THEMES={"luna": {"pet": "Luna", "gender": "girl", "word": "stars earned", "emoji": "⭐", "levels": ["Seedling 🌱", "Bright Star ✨", "Super Star 🌟", "Homework Hero 🦸‍♀️", "Galaxy Queen 👑"], "vars": {"--bg": "#F1ECFF", "--bg2": "#FFE9F4", "--line": "#E4DBFA", "--ink": "#2E1A47", "--soft": "#6E5A8A", "--grape": "#7B5CFF", "--grape-d": "#5B3FD6", "--bubble": "#FF5FA8", "--bubble-d": "#D63E86", "--addtext": "#fff", "--ring": "linear-gradient(160deg,#B9A6FF,#FFB3D6)", "--alarm2": "#3B1F8F"}, "meta": "#8B6CFF", "sw": ["#7B5CFF", "#FF5FA8", "#F1ECFF"]}, "daisy": {"pet": "Daisy", "gender": "girl", "word": "flowers grown", "emoji": "🌸", "levels": ["Little Seed 🌱", "Sprout 🌿", "Blossom 🌸", "Bouquet 💐", "Garden Queen 👑"], "vars": {"--bg": "#FFF3EE", "--bg2": "#FFE3EA", "--line": "#F7DCD2", "--ink": "#3B1F2B", "--soft": "#6B4A57", "--grape": "#C2255C", "--grape-d": "#961A46", "--bubble": "#2F9E44", "--bubble-d": "#237A35", "--addtext": "#fff", "--ring": "linear-gradient(160deg,#FFE3EA,#FFF0C2)", "--alarm2": "#7A1238"}, "meta": "#C2255C", "sw": ["#C2255C", "#2F9E44", "#FFF3EE"]}, "bolt": {"pet": "Bolt", "gender": "boy", "word": "power bolts", "emoji": "⚡", "levels": ["Rookie Bot 🔩", "Turbo Bot ⚙️", "Mega Bot 🤖", "Robo Hero 🦾", "Galaxy Commander 🚀"], "vars": {"--bg": "#EEF1FF", "--bg2": "#DDE4FF", "--line": "#DCE2F7", "--ink": "#16213E", "--soft": "#4D587A", "--grape": "#3B5BDB", "--grape-d": "#2B45AE", "--bubble": "#0B8FA6", "--bubble-d": "#076B7C", "--addtext": "#fff", "--ring": "linear-gradient(160deg,#C5D0FF,#B8F1FA)", "--alarm2": "#1B2A6B"}, "meta": "#3B5BDB", "sw": ["#3B5BDB", "#0B8FA6", "#EEF1FF"]}, "kicko": {"pet": "Kicko", "gender": "boy", "word": "goals scored", "emoji": "⚽", "levels": ["Rookie ⚽", "Striker 🥅", "Playmaker 🎯", "Captain 🎖️", "Legend 🏆"], "vars": {"--bg": "#ECF8EF", "--bg2": "#D3F9E0", "--line": "#D3EBDA", "--ink": "#10281A", "--soft": "#46614F", "--grape": "#237A36", "--grape-d": "#1A5C29", "--bubble": "#FCC419", "--bubble-d": "#B98500", "--addtext": "#10281A", "--ring": "linear-gradient(160deg,#D3F9E0,#FFF3BF)", "--alarm2": "#0F4A1E"}, "meta": "#237A36", "sw": ["#237A36", "#FCC419", "#ECF8EF"]}};
+const THEME_SVG={daisy:`<svg viewBox="0 0 200 210" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M100 150 Q96 176 100 204" stroke="#2F9E44" stroke-width="10" fill="none" stroke-linecap="round"></path>
+<path d="M100 178 Q70 160 56 176 Q76 194 100 184 Z" fill="#51CF66" stroke="#10233F" stroke-width="4" stroke-linejoin="round"></path>
+<path d="M102 170 Q132 150 148 166 Q126 186 102 176 Z" fill="#51CF66" stroke="#10233F" stroke-width="4" stroke-linejoin="round"></path>
+<ellipse cx="100" cy="42" rx="19" ry="30" transform="rotate(0 100 88)" fill="#FF8FA3" stroke="#10233F" stroke-width="4"></ellipse><ellipse cx="100" cy="42" rx="19" ry="30" transform="rotate(36 100 88)" fill="#FFA8BA" stroke="#10233F" stroke-width="4"></ellipse><ellipse cx="100" cy="42" rx="19" ry="30" transform="rotate(72 100 88)" fill="#FF8FA3" stroke="#10233F" stroke-width="4"></ellipse><ellipse cx="100" cy="42" rx="19" ry="30" transform="rotate(108 100 88)" fill="#FFA8BA" stroke="#10233F" stroke-width="4"></ellipse><ellipse cx="100" cy="42" rx="19" ry="30" transform="rotate(144 100 88)" fill="#FF8FA3" stroke="#10233F" stroke-width="4"></ellipse><ellipse cx="100" cy="42" rx="19" ry="30" transform="rotate(180 100 88)" fill="#FFA8BA" stroke="#10233F" stroke-width="4"></ellipse><ellipse cx="100" cy="42" rx="19" ry="30" transform="rotate(216 100 88)" fill="#FF8FA3" stroke="#10233F" stroke-width="4"></ellipse><ellipse cx="100" cy="42" rx="19" ry="30" transform="rotate(252 100 88)" fill="#FFA8BA" stroke="#10233F" stroke-width="4"></ellipse><ellipse cx="100" cy="42" rx="19" ry="30" transform="rotate(288 100 88)" fill="#FF8FA3" stroke="#10233F" stroke-width="4"></ellipse><ellipse cx="100" cy="42" rx="19" ry="30" transform="rotate(324 100 88)" fill="#FFA8BA" stroke="#10233F" stroke-width="4"></ellipse>
+<circle cx="100" cy="88" r="44" fill="#FFD43B" stroke="#10233F" stroke-width="5"></circle>
+<path d="M78 86 Q86 96 94 86" fill="none" stroke="#10233F" stroke-width="4.5" stroke-linecap="round"></path>
+<path d="M106 86 Q114 96 122 86" fill="none" stroke="#10233F" stroke-width="4.5" stroke-linecap="round"></path>
+<path d="M88 104 Q100 116 112 104" fill="none" stroke="#10233F" stroke-width="4.5" stroke-linecap="round"></path>
+<ellipse cx="74" cy="100" rx="7" ry="4.5" fill="#FF8FA3" opacity=".85"></ellipse><ellipse cx="126" cy="100" rx="7" ry="4.5" fill="#FF8FA3" opacity=".85"></ellipse></svg>`,bolt:`<svg viewBox="0 0 200 210" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="66" y="168" width="68" height="36" rx="12" fill="#3D5BD9" stroke="#10233F" stroke-width="5"></rect>
+<line x1="100" y1="42" x2="100" y2="20" stroke="#10233F" stroke-width="5" stroke-linecap="round"></line>
+<circle cx="100" cy="16" r="9" fill="#FF7A1A" stroke="#10233F" stroke-width="4"></circle>
+<rect x="22" y="84" width="22" height="48" rx="8" fill="#FFC23C" stroke="#10233F" stroke-width="4.5"></rect>
+<rect x="156" y="84" width="22" height="48" rx="8" fill="#FFC23C" stroke="#10233F" stroke-width="4.5"></rect>
+<rect x="38" y="40" width="124" height="134" rx="36" fill="#5B7CFA" stroke="#10233F" stroke-width="5"></rect>
+<polygon points="102 44 92 58 100 58 96 68 108 54 100 54" fill="#FFC23C" stroke="#10233F" stroke-width="2.5" stroke-linejoin="round"></polygon>
+<rect x="54" y="72" width="92" height="76" rx="24" fill="#16213E" stroke="#10233F" stroke-width="4"></rect>
+<path d="M70 106 Q80 92 90 106" fill="none" stroke="#3CF0FF" stroke-width="6" stroke-linecap="round"></path>
+<path d="M110 106 Q120 92 130 106" fill="none" stroke="#3CF0FF" stroke-width="6" stroke-linecap="round"></path>
+<path d="M84 124 Q100 136 116 124" fill="none" stroke="#3CF0FF" stroke-width="5" stroke-linecap="round"></path>
+<circle cx="66" cy="126" r="5" fill="#FF7AB6" opacity=".85"></circle><circle cx="134" cy="126" r="5" fill="#FF7AB6" opacity=".85"></circle>
+<circle cx="52" cy="160" r="3.5" fill="#C9D4FF"></circle><circle cx="148" cy="160" r="3.5" fill="#C9D4FF"></circle></svg>`,kicko:`<svg viewBox="0 0 200 210" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="100" cy="108" r="78" fill="#FFFFFF" stroke="#10233F" stroke-width="6"></circle>
+<polygon points="100 34 118 46 112 66 88 66 82 46" fill="#10233F"></polygon>
+<polygon points="30 96 44 84 58 96 52 116 34 116" fill="#10233F"></polygon>
+<polygon points="170 96 156 84 142 96 148 116 166 116" fill="#10233F"></polygon>
+<polygon points="62 170 76 160 90 170 86 184 66 184" fill="#10233F"></polygon>
+<polygon points="138 170 124 160 110 170 114 184 134 184" fill="#10233F"></polygon>
+<path d="M28 74 Q100 48 172 74 L170 90 Q100 66 30 90 Z" fill="#12B886" stroke="#10233F" stroke-width="4" stroke-linejoin="round"></path>
+<polygon points="100 62 104 72 114 72 106 78 109 88 100 82 91 88 94 78 86 72 96 72" fill="#FCC419" stroke="#10233F" stroke-width="2"></polygon>
+<ellipse cx="78" cy="112" rx="10" ry="13" fill="#10233F"></ellipse><ellipse cx="122" cy="112" rx="10" ry="13" fill="#10233F"></ellipse>
+<circle cx="81" cy="107" r="3.5" fill="#FFFFFF"></circle><circle cx="125" cy="107" r="3.5" fill="#FFFFFF"></circle>
+<path d="M78 138 Q100 162 122 138 Z" fill="#E03131" stroke="#10233F" stroke-width="4" stroke-linejoin="round"></path>
+<ellipse cx="62" cy="134" rx="8" ry="5" fill="#FF8FA3" opacity=".7"></ellipse><ellipse cx="138" cy="134" rx="8" ry="5" fill="#FF8FA3" opacity=".7"></ellipse></svg>`};
+const NOTEBOOK=`<svg viewBox="0 0 252 262" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><ellipse cx="116" cy="246" rx="74" ry="9" fill="#10233F" opacity=".12"></ellipse>
+<rect x="84" y="222" width="22" height="18" rx="7" fill="#FF922B" stroke="#10233F" stroke-width="4.5"></rect>
+<rect x="128" y="222" width="22" height="18" rx="7" fill="#FF922B" stroke="#10233F" stroke-width="4.5"></rect>
+<rect x="60" y="44" width="136" height="180" rx="16" fill="#FFFFFF" stroke="#10233F" stroke-width="5"></rect>
+<path d="M186 70 H196 M186 92 H196 M186 114 H196 M186 136 H196" stroke="#A5D8FF" stroke-width="3"></path>
+<path d="M46 150 Q26 136 20 112" fill="none" stroke="#10233F" stroke-width="12" stroke-linecap="round"></path>
+<path d="M46 150 Q26 136 20 112" fill="none" stroke="#FFD43B" stroke-width="6" stroke-linecap="round"></path>
+<circle cx="19" cy="106" r="11" fill="#FFD43B" stroke="#10233F" stroke-width="4.5"></circle>
+<rect x="46" y="38" width="136" height="182" rx="18" fill="#FFD43B" stroke="#10233F" stroke-width="6"></rect>
+<path d="M46 192 H182 V202 Q182 220 164 220 H64 Q46 220 46 202 Z" fill="#FCC419"></path>
+<rect x="46" y="38" width="136" height="182" rx="18" fill="none" stroke="#10233F" stroke-width="6"></rect>
+<rect x="66" y="26" width="9" height="24" rx="4.5" fill="#CED4DA" stroke="#10233F" stroke-width="3.5"></rect><rect x="83" y="26" width="9" height="24" rx="4.5" fill="#CED4DA" stroke="#10233F" stroke-width="3.5"></rect><rect x="100" y="26" width="9" height="24" rx="4.5" fill="#CED4DA" stroke="#10233F" stroke-width="3.5"></rect><rect x="117" y="26" width="9" height="24" rx="4.5" fill="#CED4DA" stroke="#10233F" stroke-width="3.5"></rect><rect x="134" y="26" width="9" height="24" rx="4.5" fill="#CED4DA" stroke="#10233F" stroke-width="3.5"></rect><rect x="151" y="26" width="9" height="24" rx="4.5" fill="#CED4DA" stroke="#10233F" stroke-width="3.5"></rect><rect x="168" y="26" width="9" height="24" rx="4.5" fill="#CED4DA" stroke="#10233F" stroke-width="3.5"></rect>
+<rect x="68" y="64" width="92" height="30" rx="9" fill="#FFFFFF" stroke="#10233F" stroke-width="4"></rect>
+<text x="114" y="87" text-anchor="middle" font-family="Baloo Bhaijaan 2, Trebuchet MS, sans-serif" font-size="20" font-weight="800" fill="#0B7A75">ABC</text>
+<ellipse cx="94" cy="130" rx="11" ry="14" fill="#10233F"></ellipse><ellipse cx="136" cy="130" rx="11" ry="14" fill="#10233F"></ellipse>
+<circle cx="98" cy="124" r="4" fill="#FFFFFF"></circle><circle cx="140" cy="124" r="4" fill="#FFFFFF"></circle>
+<path d="M86 110 Q94 104 102 108 M128 108 Q136 104 144 110" fill="none" stroke="#10233F" stroke-width="4" stroke-linecap="round"></path>
+<path d="M94 156 Q115 182 136 156 Z" fill="#E8590C" stroke="#10233F" stroke-width="4.5" stroke-linejoin="round"></path>
+<path d="M104 166 Q115 176 126 166 Q115 162 104 166 Z" fill="#FFA8A8"></path>
+<ellipse cx="74" cy="152" rx="10" ry="6" fill="#FF8787" opacity=".6"></ellipse><ellipse cx="156" cy="152" rx="10" ry="6" fill="#FF8787" opacity=".6"></ellipse>
+<g transform="rotate(24 214 140)">
+<rect x="206" y="72" width="18" height="16" fill="#FFA8BA" stroke="#10233F" stroke-width="4"></rect>
+<rect x="206" y="86" width="18" height="10" fill="#ADB5BD" stroke="#10233F" stroke-width="4"></rect>
+<rect x="206" y="94" width="18" height="66" fill="#4DABF7" stroke="#10233F" stroke-width="4"></rect>
+<path d="M212 96 V158" stroke="#A5D8FF" stroke-width="3"></path>
+<polygon points="206 160 224 160 215 182" fill="#FFE8CC" stroke="#10233F" stroke-width="4" stroke-linejoin="round"></polygon>
+<polygon points="212 174 218 174 215 182" fill="#10233F"></polygon></g>
+<path d="M182 164 Q196 158 204 146" fill="none" stroke="#10233F" stroke-width="12" stroke-linecap="round"></path>
+<path d="M182 164 Q196 158 204 146" fill="none" stroke="#FFD43B" stroke-width="6" stroke-linecap="round"></path>
+<circle cx="206" cy="144" r="11" fill="#FFD43B" stroke="#10233F" stroke-width="4.5"></circle></svg>`;
+THEMES.notebook={"pet": "Buddy", "gender": "", "word": "stars earned", "emoji": "⭐", "levels": ["Seedling 🌱", "Bright Star ✨", "Super Star 🌟", "Homework Hero 🦸", "Champion 🏆"], "vars": {"--bg": "#F7F5FF", "--bg2": "#FFE1EA", "--line": "#E3E0FA", "--ink": "#22304F", "--soft": "#5B6485", "--grape": "#7C6CF2", "--grape-d": "#5B4BD0", "--bubble": "#F2668B", "--bubble-d": "#C94468", "--addtext": "#fff", "--ring": "linear-gradient(160deg,#FFF3BF,#FFE1EA)", "--alarm2": "#3A2F8F"}, "meta": "#7C6CF2", "sw": ["#7C6CF2", "#F2668B", "#FFD43B"]};
+const themeId=()=>'notebook';
+const TH=()=>THEMES[themeId()];
+const svgOf=id=>id==='notebook'?NOTEBOOK:id==='luna'?UNI:THEME_SVG[id];
+const MASCOT=()=>svgOf(themeId());
+const petName=()=>state.pet||TH().pet;
+const DARK={
+ luna:{'--bg':'#1B1230','--bg2':'#2A1636','--card':'#2A1F45','--line':'#3D2F63','--ink':'#F6F0FF','--soft':'#BBA9DA','--grape-t':'#C4B5FF'},
+ daisy:{'--bg':'#22141A','--bg2':'#3A1C28','--card':'#33202A','--line':'#4D2F3B','--ink':'#FFF0F3','--soft':'#D9B3BF','--grape-t':'#FF9DBE'},
+ bolt:{'--bg':'#0F1530','--bg2':'#1B2550','--card':'#1C2447','--line':'#2E3A6B','--ink':'#EEF2FF','--soft':'#AAB6E0','--grape-t':'#9DB4FF'},
+ kicko:{'--bg':'#0E1F14','--bg2':'#173524','--card':'#183022','--line':'#2A4A36','--ink':'#EAF8EE','--soft':'#A7C9B2','--grape-t':'#86E3A2'},
+ notebook:{'--bg':'#17162A','--bg2':'#2A1F33','--card':'#25233D','--line':'#3A3760','--ink':'#F2F0FF','--soft':'#B7B3DA','--grape-t':'#B9AEFF'}};
+const darkMQ=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;
+const isDark=()=>!!(darkMQ&&darkMQ.matches);
+if(darkMQ&&darkMQ.addEventListener)darkMQ.addEventListener('change',()=>{applyTheme();render()});
+function applyTheme(){
+  const id=themeId(),t=TH(),r=document.documentElement,dk=isDark();
+  const light={'--card':'#FFFFFF','--grape-t':t.vars['--grape']};
+  const v=Object.assign({},t.vars,light,dk?(DARK[id]||DARK.luna):{});
+  Object.entries(v).forEach(([k,x])=>r.style.setProperty(k,x));
+  r.style.colorScheme=dk?'dark':'light';
+  const m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',dk?v['--bg']:t.meta);
+  const u=$('#uniHead');if(u&&u.dataset.th!==id){u.innerHTML=MASCOT();u.dataset.th=id}
+}
+function miniBuddy(id,size){const t=THEMES[id];return `<span style="width:${size}px;height:${size}px;border-radius:50%;overflow:hidden;display:block;background:${t.vars['--ring']};padding:${Math.round(size*.07)}px ${Math.round(size*.04)}px 0">${svgOf(id)}</span>`}
+function setTheme(id){
+  const prev=themeId();
+  if(state.pet&&state.pet===THEMES[prev].pet)state.pet='';
+  state.theme=id;state.gender=THEMES[id].gender;save();applyTheme();render();
+}
+function buddySheet(gender,after,sticky){
+  const ids=Object.keys(THEMES).filter(k=>!gender||THEMES[k].gender===gender);
+  let pick=ids.includes(state.theme)?state.theme:ids[0];
+  const card=id=>{const t=THEMES[id];return `<button class="bcard" data-b="${id}" aria-pressed="${id===pick}" style="--c:${t.vars['--grape']};--cb:${t.vars['--bg']};--r:${t.vars['--ring']}">
+    <span class="m">${svgOf(id)}</span><b>${t.pet}</b><span class="sw">${t.sw.map(c=>`<i style="background:${c}"></i>`).join('')}</span>
+    <small>Collect ${t.word.split(' ')[0]} ${t.emoji}</small></button>`};
+  openSheet(`<h3 style="text-align:center">Pick your buddy! ✨</h3>
+    <p style="text-align:center;font-size:17px;color:var(--soft);margin:-6px 0 12px">Your buddy reminds you about homework and cheers you on.</p>
+    ${gender?`<div class="buddies">${ids.map(card).join('')}</div>`
+      :`<div class="lbl">For girls</div><div class="buddies">${['luna','daisy'].map(card).join('')}</div><div class="lbl">For boys</div><div class="buddies">${['bolt','kicko'].map(card).join('')}</div>`}
+    <p class="note" style="text-align:center">You can change your buddy later in Settings.</p>
+    <button class="btn main" id="go" style="width:100%;margin-top:6px">Let’s go with ${THEMES[pick].pet}!</button>
+    ${sticky?'':'<div class="btns"><button class="btn" id="cancel">Cancel</button></div>'}`,
+  (el,close)=>{
+    el.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{pick=b.dataset.b;el.querySelectorAll('[data-b]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));el.querySelector('#go').textContent=`Let’s go with ${THEMES[pick].pet}!`;playTune('bubbles')});
+    if(!sticky)el.querySelector('#cancel').onclick=close;
+    el.querySelector('#go').onclick=()=>{setTheme(pick);close();hop();celebrate();speak(`Hi ${nm()}! I'm ${petName()}!`);if(after)after()};
+  },sticky);
+}
+const DAYS=[{i:0,s:'Sun',n:'Sunday'},{i:1,s:'Mon',n:'Monday'},{i:2,s:'Tue',n:'Tuesday'},{i:3,s:'Wed',n:'Wednesday'},{i:4,s:'Thu',n:'Thursday'}];
+const PALETTE=['#FF5FA8','#7B5CFF','#1FBF9F','#FF9F1C','#2D9CDB','#E84393','#00B894','#A66CFF','#F76E11','#0FB5C9','#D35400','#6C5CE7'];
+const EMOJIS=['🔢','🔬','🔤','✍️','📖','🕌','🌍','🎨','⚽','💻','🧩','🎵','🧪','📐','🌱','🦋','🏠','📝','🌙','🧠'];
+const DEFAULT_SUBJECTS=[
+ ['math','Math','🔢'],['science','Science','🔬'],['english','English','🔤'],['arabic','Arabic','✍️'],
+ ['quran','Quran','📖'],['islamic','Islamic Studies','🕌'],['social','Social Studies','🌍'],['art','Art','🎨'],
+ ['pe','PE','⚽'],['computer','Computer','💻'],['life','Life Skills','🧩']
+].map((s,k)=>({id:s[0],name:s[1],emoji:s[2],color:PALETTE[k%PALETTE.length]}));
+
+function freshState(){
+  const schedule={};DAYS.forEach(d=>schedule[d.i]=Array(9).fill(null));
+  return {v:1,rev:0,name:'',trialUsed:0,pet:'',theme:'',gender:'',rewards:[],pin:null,periods:9,m9:true,sound:'chime',voice:true,subjects:DEFAULT_SUBJECTS,schedule,hw:[],stars:0};
+}
+let state=freshState();
+let dbRef=null,saveTimer=null,view='today',alerting=null,audioCtx=null,wakeLock=null;
+
+/* ---------- Helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const key=d=>{const x=new Date(d);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')};
+const fromKey=k=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d)};
+const todayK=()=>key(new Date());
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const nextSchool=d=>{let x=new Date(d);do{x=addDays(x,1)}while(x.getDay()>4);return x};
+const fmtDate=k=>fromKey(k).toLocaleDateString('en-US',{weekday:'short',day:'numeric',month:'short'});
+const fmtTime=t=>new Date(t).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+const subj=id=>state.subjects.find(s=>s.id===id);
+function relDay(k){
+  const diff=Math.round((fromKey(k)-fromKey(todayK()))/864e5);
+  if(diff===0)return 'Today';if(diff===1)return 'Tomorrow';if(diff===-1)return 'Yesterday';
+  return fmtDate(k);
+}
+function level(n){const L=TH().levels;return n>=50?L[4]:n>=30?L[3]:n>=15?L[2]:n>=5?L[1]:L[0]}
+
+/* ---------- Storage ---------- */
+function migrate(raw){
+  if(!state.theme&&state.name){state.theme='luna';state.gender='girl'}
+  if(state.pet==='Luna'&&state.theme&&state.theme!=='luna')state.pet='';
+  if(raw&&!raw.m9){if(state.periods<9)state.periods=9;state.m9=true}
+  DAYS.forEach(d=>{state.schedule[d.i]=state.schedule[d.i]||[];while(state.schedule[d.i].length<state.periods)state.schedule[d.i].push(null)});
+}
+function loadLocal(){try{const r=localStorage.getItem('hbfree-hw');if(r){const d=JSON.parse(r);state=Object.assign(freshState(),d);migrate(d)}}catch(e){}migrate()}
+function save(){
+  stamp();
+  state.rev=(state.rev||0)+1;
+  try{localStorage.setItem('hbfree-hw',JSON.stringify(state))}catch(e){}
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{if(dbRef)dbRef.set(JSON.parse(JSON.stringify(state))).catch(()=>{});},700);
+}
+function prune(){
+  const cut=Date.now()-60*864e5;
+  state.hw=state.hw.filter(h=>!(h.done&&h.doneAt<cut));
+}
+async function connectDb(){
+  try{
+    if(!window.claude||!window.claude.use)return;
+    const db=await window.claude.use('db');if(!db)return;
+    dbRef=db.doc('amolah/state');
+    const snap=await dbRef.get();
+    if(snap.exists){
+      const d=snap.data();
+      if(d&&(d.rev||0)>=(state.rev||0)){state=Object.assign(freshState(),d);migrate(d);try{localStorage.setItem('hbfree-hw',JSON.stringify(state))}catch(e){}render()}
+      else dbRef.set(JSON.parse(JSON.stringify(state))).catch(()=>{});
+    }else dbRef.set(JSON.parse(JSON.stringify(state))).catch(()=>{});
+    dbRef.onSnapshot(s=>{
+      if(!s.exists||s.metadata.hasPendingWrites)return;
+      const d=s.data();if(d&&(d.rev||0)>(state.rev||0)){state=Object.assign(freshState(),d);migrate(d);render()}
+    },()=>{});
+  }catch(e){}
+}
+
+/* ---------- Family cloud sync (Supabase) ---------- */
+const SB_URL='https://tpwzflhnsncwnhddnfqz.supabase.co';
+const SB_KEY='sb_publishable_3TAz5OaFcP7B1178f2LDvQ_ILGgpHir';
+let syncing=false,syncAgain=false,lastSync=0,syncErr='',lastSnap={hw:{},rewards:{},top:''};
+const cloudOK=()=>!(window.claude&&window.claude.use);
+const LIST_KEYS=['hw','rewards','del','t','rev'];
+function topSig(o){const c={};Object.keys(o).sort().forEach(k=>{if(!LIST_KEYS.includes(k))c[k]=o[k]});return JSON.stringify(c)}
+const itemSig=x=>{const c={...x};delete c.u;return JSON.stringify(c)};
+function snap(){
+  lastSnap={hw:{},rewards:{},top:topSig(state)};
+  (state.hw||[]).forEach(x=>lastSnap.hw[x.id]=itemSig(x));
+  (state.rewards||[]).forEach(x=>lastSnap.rewards[x.id]=itemSig(x));
+}
+function stamp(){
+  const now=Date.now();state.del=state.del||{};
+  ['hw','rewards'].forEach(k=>{
+    const cur=new Set();
+    (state[k]||[]).forEach(x=>{cur.add(x.id);if(lastSnap[k][x.id]!==itemSig(x))x.u=now});
+    Object.keys(lastSnap[k]).forEach(id=>{if(!cur.has(id))state.del[id]=now});
+  });
+  if(topSig(state)!==lastSnap.top)state.t=now;
+  snap();
+}
+function mergeState(a,b,preferB){
+  const del={...(a.del||{})};Object.entries(b.del||{}).forEach(([k,v])=>{if(!del[k]||v>del[k])del[k]=v});
+  const cut=Date.now()-120*864e5;Object.keys(del).forEach(k=>{if(del[k]<cut)delete del[k]});
+  const list=(x=[],y=[])=>{const m=new Map();[...x,...y].forEach(i=>{const o=m.get(i.id);if(!o||(i.u||0)>(o.u||0))m.set(i.id,i)});
+    return [...m.values()].filter(i=>!(del[i.id]&&del[i.id]>=(i.u||0)))};
+  const top=preferB||(b.t||0)>(a.t||0)?b:a;
+  return Object.assign(freshState(),JSON.parse(JSON.stringify(top)),{hw:list(a.hw,b.hw),rewards:list(a.rewards,b.rewards),del});
+}
+function canon(v){if(Array.isArray(v))return '['+v.map(canon).join(',')+']';if(v&&typeof v==='object')return '{'+Object.keys(v).sort().filter(k=>v[k]!==undefined).map(k=>JSON.stringify(k)+':'+canon(v[k])).join(',')+'}';return JSON.stringify(v)}
+async function rpc(fn,args){
+  const r=await fetch(`${SB_URL}/rest/v1/rpc/${fn}`,{method:'POST',headers:{apikey:SB_KEY,'Content-Type':'application/json'},body:JSON.stringify(args)});
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  const t=await r.text();return t?JSON.parse(t):null;
+}
+/* ---------- Licensing + cloud sync ---------- */
+let lic=null,cfg={trial_limit:'2',contact_whatsapp:'',price_text:''};
+try{lic=JSON.parse(localStorage.getItem('hbfree-license')||'null')}catch(e){}
+try{Object.assign(cfg,JSON.parse(localStorage.getItem('hbfree-cfg')||'{}'))}catch(e){}
+const saveLic=()=>{try{lic?localStorage.setItem('hbfree-license',JSON.stringify(lic)):localStorage.removeItem('hbfree-license')}catch(e){}};
+const licOK=()=>false;
+const trialLimit=()=>Math.max(0,parseInt(cfg.trial_limit,10)||2);
+const trialLeft=()=>Math.max(0,trialLimit()-(state.trialUsed||0));
+const trialBlocked=()=>false;
+function devId(){let d=null;try{d=localStorage.getItem('hbfree-device')}catch(e){}
+  if(!d){d=(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2));try{localStorage.setItem('hbfree-device',d)}catch(e){}}return d}
+function devName(){const u=navigator.userAgent;return /iPad|Macintosh/.test(u)&&'ontouchend' in document?'iPad':/iPhone/.test(u)?'iPhone':/Android/.test(u)?'Android':'Browser'}
+const REASONS={not_found:'This code is not correct. Check it and try again.',revoked:'This code has been stopped.',expired:'This code has expired.',
+  too_many_devices:'This code is already used on the maximum number of devices.',device_removed:'This device was removed from the account.',bad_device:'Please try again.'};
+function syncPill(){
+  const b=$('#syncPill');if(!b)return;
+  b.hidden=!licOK();
+  b.textContent=syncErr?'☁️ ⚠️':syncing?'☁️ …':'☁️ ✓';
+  b.title=syncErr?('Sync problem: '+syncErr):'Synced '+(lastSync?fmtTime(lastSync):'');
+}
+function adopt(next){
+  state=next;migrate(null);
+  try{localStorage.setItem('hbfree-hw',JSON.stringify(state))}catch(e){}
+  snap();
+}
+function licenseLost(reason){
+  if(!lic)return;lic.status='invalid';lic.reason=reason;saveLic();syncPill();
+  if(!document.querySelector('.scrim'))render();
+}
+async function syncNow(preferRemote){
+  if(!licOK())return;
+  if(syncing){syncAgain=true;return}
+  syncing=true;syncErr='';syncPill();
+  try{
+    const r=await rpc('get_license_data',{p_code:lic.code,p_device:devId()});
+    if(!r||!r.ok){syncing=false;licenseLost(r?r.reason:'not_found');return}
+    lic.expires=r.expires_at||null;lic.checked=Date.now();saveLic();
+    const remote=r.data;
+    if(!remote){await rpc('save_license_data',{p_code:lic.code,p_device:devId(),p_data:state});}
+    else{
+      const merged=mergeState(state,remote,preferRemote);
+      const same=canon(merged)===canon(Object.assign(freshState(),remote));
+      const localChanged=canon(merged)!==canon(state);
+      adopt(merged);
+      if(!same)await rpc('save_license_data',{p_code:lic.code,p_device:devId(),p_data:state});
+      if(localChanged&&!document.querySelector('.scrim'))render();
+    }
+    lastSync=Date.now();
+  }catch(e){syncErr=navigator.onLine===false?'No internet':'Could not reach the cloud'}
+  syncing=false;syncPill();
+  if(syncAgain){syncAgain=false;syncNow()}
+}
+async function loadConfig(){
+  try{const c=await rpc('get_public_config',{});if(c){Object.assign(cfg,c);localStorage.setItem('hbfree-cfg',JSON.stringify(cfg));if(!document.querySelector('.scrim'))render()}}catch(e){}
+}
+function initCloud(){syncPill();loadConfig()}
+function upgradeSheet(){
+  openSheet(`<div style="text-align:center"><span style="display:inline-block;width:120px">${NOTEBOOK}</span>
+    <h3 style="margin-top:6px">Get the full version ⭐</h3></div>
+    <div style="font-size:18px;line-height:1.7;background:var(--bg);border-radius:20px;padding:12px 16px">
+      📋 All homework types: Test, Quiz, Project, Reading and more<br>
+      🦄 4 buddies to choose from, each with its own colors<br>
+      🎵 Choose your reminder sound<br>
+      ☁️ Family sync: the same homework on the iPad and your parents’ phones<br>
+      🎁 Parent rewards: set a prize your child earns with stars<br>
+      🌐 Arabic or English for each child<br>
+      👧👦 Brothers and sisters together under one code</div>
+    ${contactHtml()}
+    <a class="btn main" style="display:block;text-align:center;text-decoration:none;margin-top:10px" target="_blank" rel="noopener" href="${FULL_URL}">Open the full version</a>
+    <div class="btns"><button class="btn" id="cancel">Not now</button></div>`,
+  (el,close)=>{el.querySelector('#cancel').onclick=close});
+}
+function contactHtml(){
+  const w=(cfg.contact_whatsapp||'').replace(/[^0-9]/g,'');
+  return `${cfg.price_text?`<p style="font-size:17px;font-weight:700;background:var(--bg);border-radius:18px;padding:10px 14px;unicode-bidi:plaintext" dir="auto">${esc(cfg.price_text)}</p>`:''}
+    ${w?`<a class="btn green" style="display:block;text-align:center;text-decoration:none;margin-top:8px" target="_blank" rel="noopener" href="https://wa.me/${w}?text=${encodeURIComponent('مرحباً، أرغب في شراء كود تفعيل تطبيق Homework Buddy للواجبات 📒')}">💬 Get a code on WhatsApp</a>`:''}`;
+}
+function trialBanner(){
+  if(FREE)return '';
+  if(licOK())return '';
+  const bad=lic&&lic.status==='invalid';
+  const left=trialLeft(),lim=trialLimit();
+  return `<button class="nextrw" id="trialBtn" style="border-color:${bad||!left?'var(--danger)':'var(--sun)'}">
+    <span class="e">${bad?'⚠️':left?'🎁':'🔒'}</span>
+    <span style="flex:1">${bad?'Your activation stopped':left?`Free trial: ${left} of ${lim} homework left`:'Your free trial is finished'}<br>
+    <small style="color:var(--soft)">${bad?esc(REASONS[lic.reason]||''):'Tap here to activate Homework Buddy and keep going'}</small></span>
+    <span class="pill on" style="white-space:nowrap">🔑 Activate</span></button>`;
+}
+function activationSheet(reason,after){
+  const title=reason==='limit'?`You used your ${trialLimit()} free homework! 🎉`:reason==='invalid'?'Activate again 🔑':'Activate Homework Buddy 🔑';
+  const sub=reason==='limit'?`To keep adding homework, ask your mom or dad for an activation code.`
+    :reason==='invalid'?esc(REASONS[lic&&lic.reason]||'Enter a new activation code.')
+    :'Enter the activation code you received. Use the same code on the iPad and on your parents’ phones to share the homework.';
+  openSheet(`<div style="text-align:center"><span class="bigUni" style="width:110px;height:110px;border-radius:50%;background:var(--ring);overflow:hidden;padding:8px 5px 0">${MASCOT()}</span>
+    <h3 style="margin-top:10px">${title}</h3><p style="font-size:17px;color:var(--soft);margin:0 0 6px">${sub}</p></div>
+    <div class="lbl">Activation code</div>
+    <input class="field" id="ac" placeholder="HWB-XXXX-XXXX" autocapitalize="characters" autocomplete="off" spellcheck="false" style="direction:ltr;text-transform:uppercase;font-size:24px;font-weight:800;letter-spacing:2px;text-align:center">
+    <p class="note" id="acErr" style="color:var(--danger);font-weight:700;min-height:1em"></p>
+    <button class="btn main" id="act" style="width:100%">Activate ✨</button>
+    ${contactHtml()}
+    <div class="btns"><button class="btn" id="cancel">Not now</button></div>`,
+  (el,close)=>{
+    el.querySelector('#cancel').onclick=close;
+    const go=async()=>{
+      const code=el.querySelector('#ac').value.trim().toUpperCase().replace(/\s/g,'');
+      const err=el.querySelector('#acErr');
+      if(code.length<10){err.textContent='Type the full code, like HWB-AB12-CD34';return}
+      const b=el.querySelector('#act');b.disabled=true;b.textContent='Checking…';err.textContent='';
+      try{
+        const r=await rpc('activate_license',{p_code:code,p_device:devId(),p_device_name:devName()});
+        if(!r||!r.ok){err.textContent=REASONS[r&&r.reason]||'Could not activate. Try again.';b.disabled=false;b.textContent='Activate ✨';return}
+        lic={code:r.code,status:'ok',expires:r.expires_at||null,at:Date.now(),checked:Date.now()};saveLic();
+        close();await syncNow(!!r.has_data);render();celebrate();playTune('xylo');
+        toast('Homework Buddy is activated! 🎉');speak(`Yay! You are all set!`);
+        if(after)after();
+      }catch(e){err.textContent='No internet connection. Try again.';b.disabled=false;b.textContent='Activate ✨'}
+    };
+    el.querySelector('#act').onclick=go;
+    el.querySelector('#ac').addEventListener('keydown',e=>{if(e.key==='Enter')go()});
+  });
+}
+function accountSheet(){
+  openSheet(`<h3>Account 🔑</h3>
+    <p style="font-size:18px"><span class="syncok">Activated ✓</span> ${lic.expires?`until ${fmtDate(key(lic.expires))}`:'(no expiry)'}</p>
+    <div class="codebox">${esc(lic.code)}</div>
+    <p class="note">Use this same code on your family’s phones and iPads to share the homework. ${syncErr?'⚠️ '+esc(syncErr):lastSync?'Last synced at '+fmtTime(lastSync):''}</p>
+    <div class="btns"><button class="btn red" id="leave">Remove from this device</button><button class="btn main" id="now">Sync now</button></div>
+    <div class="btns"><button class="btn" id="cancel">Close</button></div>`,
+  (el,close)=>{
+    el.querySelector('#cancel').onclick=close;
+    el.querySelector('#now').onclick=async()=>{await syncNow();close();toast(syncErr?'⚠️ '+syncErr:'Synced ✓')};
+    el.querySelector('#leave').onclick=()=>{if(!confirm('Remove the activation from this device? The homework stays on your account and on your other devices.'))return;
+      lic=null;saveLic();syncPill();close();render();toast('Activation removed from this device')};
+  });
+}
+function onboarding(){
+  openSheet(`<div style="text-align:center"><span style="display:inline-block;width:130px">${NOTEBOOK}</span>
+    <h3 style="margin-top:6px">Welcome to Homework Buddy!</h3>
+    <p style="font-size:17px;color:var(--soft);margin:0">I’ll remind you when it’s homework time.</p></div>
+    <div class="lbl">What’s your name? (English or عربي)</div>
+    <input class="field" id="on" dir="auto" maxlength="30" placeholder="Your name" style="font-size:24px;font-weight:700;text-align:center">
+    <button class="btn main" id="next" style="width:100%;margin-top:16px">Let’s start ✨</button>`,
+  (el,close)=>{
+    el.querySelector('#next').onclick=()=>{
+      const n=el.querySelector('#on').value.trim();
+      if(!n){toast('Type your name first 🙂');el.querySelector('#on').focus();return}
+      state.name=n;state.theme='notebook';save();close();render();hop();celebrate();speak(`Hi ${n}! Let's add your first homework!`);
+    };
+  },true);
+}
+function startChoice(){
+  if(licOK()){speak(`Let's add your first homework!`);return}
+  openSheet(`<div style="text-align:center"><span class="bigUni" style="width:120px;height:120px;border-radius:50%;background:var(--ring);overflow:hidden;padding:8px 5px 0">${MASCOT()}</span>
+    <h3 style="margin-top:10px">Hi ${esc(nm())}! I’m ${esc(petName())}</h3>
+    <p style="font-size:17px;color:var(--soft);margin:0">I’ll remind you when it’s homework time!</p></div>
+    <button class="btn pink" id="trial" style="width:100%;margin-top:18px">✨ Start my free trial<br><small style="font-size:14px;font-weight:600">${trialLimit()} free homework</small></button>
+    <button class="btn" id="code" style="width:100%;margin-top:10px">🔑 I have an activation code</button>`,
+  (el,close)=>{
+    el.querySelector('#trial').onclick=()=>{close();render();speak(`Let's add your first homework, ${nm()}!`)};
+    el.querySelector('#code').onclick=()=>{close();activationSheet('onboard')};
+  },true);
+}
+
+/* ---------- Sound & voice ---------- */
+function unlockAudio(){
+  try{
+    if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==='suspended')audioCtx.resume();
+    const b=audioCtx.createBuffer(1,1,22050),s=audioCtx.createBufferSource();s.buffer=b;s.connect(audioCtx.destination);s.start(0);
+  }catch(e){}
+}
+function tone(f,t,dur,type='sine',vol=.35){
+  const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+  o.type=type;o.frequency.value=f;o.connect(g);g.connect(audioCtx.destination);
+  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.start(t);o.stop(t+dur+.05);
+}
+const TUNES={
+  chime:{name:'Magic chime ✨',notes:[[1047,0],[1319,.15],[1568,.3],[2093,.45],[1568,.7],[2093,.85]],type:'sine',d:.7},
+  xylo:{name:'Xylophone 🎶',notes:[[784,0],[880,.14],[988,.28],[1175,.42],[988,.62],[1175,.76],[1568,.9]],type:'triangle',d:.45},
+  bubbles:{name:'Bubble pop 🫧',notes:[[600,0],[900,.12],[700,.24],[1100,.36],[800,.48],[1300,.6]],type:'sine',d:.18}
+};
+function playTune(name,times=1){
+  if(!audioCtx)return;if(audioCtx.state==='suspended')audioCtx.resume();
+  const t=TUNES[name]||TUNES.chime;
+  for(let r=0;r<times;r++){
+    const base=audioCtx.currentTime+.05+r*1.9;
+    t.notes.forEach(([f,o])=>{tone(f,base+o,t.d,t.type);tone(f*2,base+o,t.d*.6,'sine',.08)});
+  }
+}
+function yay(){
+  if(!audioCtx)return;const b=audioCtx.currentTime+.02;
+  [523,659,784,1047].forEach((f,i)=>tone(f,b+i*.09,.35,'triangle',.3));
+}
+function speak(text){
+  if(!state.voice||!('speechSynthesis' in window))return;
+  try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.pitch=1.35;u.rate=.95;speechSynthesis.speak(u)}catch(e){}
+}
+
+/* ---------- Wake lock ---------- */
+async function toggleWake(){
+  if(wakeLock){wakeLock.release().catch(()=>{});wakeLock=null;$('#wakeBtn').classList.remove('on');toast('Screen can sleep now');return}
+  try{wakeLock=await navigator.wakeLock.request('screen');$('#wakeBtn').classList.add('on');toast('Screen stays on 🌙');
+    wakeLock.addEventListener('release',()=>{wakeLock=null;$('#wakeBtn').classList.remove('on')});
+  }catch(e){toast('This iPad can’t keep the screen on here. Set Auto-Lock to Never in Settings.')}
+}
+
+/* ---------- Header ---------- */
+function drawJar(){
+  const tot=state.stars,n=tot%20,full=Math.floor(tot/20),id=themeId(),DKc='#10233F';
+  const lvl5=Math.min(5,Math.ceil((n||(tot?20:0))/4));
+  let body='';
+  if(id==='luna'||id==='notebook'){
+    let st='';const pos=[];for(let r=0;r<5;r++)for(let c=0;c<4;c++)pos.push([33+c*18+(r%2?6:0),132-r*18]);
+    for(let i=0;i<n;i++){const[x,y]=pos[i];st+=`<text x="${x}" y="${y}" font-size="19" fill="#FFC23C" stroke="#E0A200" stroke-width=".6" text-anchor="middle">★</text>`}
+    body=`<rect x="30" y="6" width="60" height="18" rx="6" fill="#FF5FA8"/><rect x="26" y="22" width="68" height="8" rx="4" fill="#E0498F"/>
+     <path d="M28 30 Q18 30 18 44 L18 128 Q18 144 34 144 L86 144 Q102 144 102 128 L102 44 Q102 30 92 30 Z" fill="rgba(123,92,255,.12)" stroke="#7B5CFF" stroke-width="4"/>${st}
+     <path d="M30 46 L30 110" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".6"/>`;
+  }else if(id==='daisy'){
+    const fx=[{x:32,y:56,c:'#FF8FA3'},{x:88,y:52,c:'#FFA94D'},{x:60,y:34,c:'#B197FC'},{x:44,y:74,c:'#FFD43B'},{x:76,y:72,c:'#FF8FA3'}];
+    body=fx.slice(0,Math.max(1,lvl5)).map((f,k)=>k<lvl5?`<path d="M${f.x} 96 Q${f.x+3} ${(96+f.y)/2} ${f.x} ${f.y}" stroke="#2F9E44" stroke-width="4" fill="none"/><circle cx="${f.x}" cy="${f.y}" r="12" fill="${f.c}" stroke="${DKc}" stroke-width="3"/><circle cx="${f.x}" cy="${f.y}" r="4.5" fill="#FFD43B"/>`
+      :`<path d="M60 96 Q62 84 60 76" stroke="#2F9E44" stroke-width="4" fill="none"/><ellipse cx="54" cy="80" rx="7" ry="4" fill="#51CF66"/>`).join('')+
+      `<path d="M20 96 H100 L90 144 H30 Z" fill="#E8590C" stroke="${DKc}" stroke-width="4.5" stroke-linejoin="round"/><rect x="14" y="90" width="92" height="14" rx="5" fill="#FF922B" stroke="${DKc}" stroke-width="4.5"/>`;
+  }else if(id==='bolt'){
+    let bars='';for(let k=0;k<5;k++)bars+=`<rect x="26" y="${118-k*20}" width="56" height="15" rx="4" fill="${k<lvl5?'#12B8D4':'#E3ECF7'}"/>`;
+    body=`<rect x="42" y="8" width="24" height="12" rx="4" fill="${DKc}"/><rect x="16" y="18" width="76" height="126" rx="16" fill="#fff" stroke="${DKc}" stroke-width="5"/>${bars}
+      <polygon points="62 40 40 82 56 82 46 118 76 70 60 70 70 40" fill="#FFC23C" stroke="${DKc}" stroke-width="3.5" stroke-linejoin="round"/>`;
+  }else{
+    const balls=[[30,138],[48,138],[66,138],[84,138],[102,138]].slice(0,lvl5).map(([x,y])=>`<circle cx="${x-6}" cy="${y}" r="8" fill="#fff" stroke="${DKc}" stroke-width="2.5"/><circle cx="${x-6}" cy="${y}" r="3" fill="${DKc}"/>`).join('');
+    body=`<path d="M30 14 H90 V44 Q90 76 60 80 Q30 76 30 44 Z" fill="#FCC419" stroke="${DKc}" stroke-width="4.5" stroke-linejoin="round"/>
+      <path d="M30 22 H14 Q12 52 34 56 M90 22 H106 Q108 52 86 56" fill="none" stroke="${DKc}" stroke-width="4.5" stroke-linecap="round"/>
+      <rect x="52" y="80" width="16" height="16" fill="#F59F00" stroke="${DKc}" stroke-width="4"/><rect x="34" y="96" width="52" height="16" rx="4" fill="#12B886" stroke="${DKc}" stroke-width="4"/>
+      <circle cx="60" cy="42" r="14" fill="#fff" stroke="${DKc}" stroke-width="3"/><polygon points="60 34 67 39 64 47 56 47 53 39" fill="${DKc}"/>${balls}`;
+  }
+  $('#jar').innerHTML=body+(full?`<circle cx="98" cy="20" r="16" fill="#1FBF9F"/><text x="98" y="26" font-size="16" fill="#fff" text-anchor="middle" font-weight="800">×${full}</text>`:'');
+  $('#starCount').textContent=tot;$('#lvl').textContent=level(tot);$('#collWord').textContent=TH().word;
+}
+function header(){
+  applyTheme();
+  const h=new Date().getHours();
+  const g=h<12?'Good morning':h<17?'Good afternoon':'Good evening';
+  $('#hi').textContent=state.name?`${g}, ${state.name}!`:`${g}!`;
+  const left=state.hw.filter(x=>!x.done).length;
+  const late=state.hw.filter(x=>!x.done&&x.due<todayK()).length;
+  $('#sub').textContent= left===0?'All homework done. You’re amazing! 🎉'
+    : late?`You have ${left} to do. ${late} ${late>1?'are':'is'} late, let’s start there!`
+    : `You have ${left} homework ${left>1?'tasks':'task'} to do.`;
+  drawJar();
+  const b=$('#upBadge');b.hidden=!left;b.textContent=left;
+  const sn=$('#splashName');if(sn)sn.textContent=state.name?`Hi ${state.name}!`:'Hi! I’m Luna';
+  $('#petName').textContent=petName();
+}
+
+/* ---------- Views ---------- */
+function hwCard(h){
+  const L=hwLook(h);
+  const late=!h.done&&h.due<todayK(), isToday=h.due===todayK();
+  return `<article class="hw ${h.done?'isdone':''}" style="--c:${L.color}">
+    <div class="emo">${L.emoji}</div>
+    <div>
+      <div class="sub" dir="auto">${esc(L.title)}</div>
+      <div class="chips" style="margin:3px 0 1px"><span class="chip type ${typ(h.type).exam?'exam':''}">${typ(h.type).emoji} ${typ(h.type).name}</span>${L.subject?`<span class="chip" dir="auto">${esc(L.subject)}</span>`:''}</div>
+      <div class="txt" dir="auto">${esc(h.text)}</div>
+      <div class="chips">
+        ${h.done?`<span class="chip">Done ${relDay(key(h.doneAt))}</span>`
+          :`<span class="chip ${late?'late':isToday?'today':''}">${late?'Late! ':''}Needed ${relDay(h.due)}</span>
+            <span class="chip">⏰ ${relDay(key(h.remindAt))} ${fmtTime(h.remindAt)}</span>`}
+      </div>
+      <div class="cardbtns"><button class="editbtn" data-edit="${h.id}">✏️ Edit</button><button class="editbtn del" data-del="${h.id}">🗑️ Delete</button></div>
+    </div>
+    <button class="check" data-done="${h.id}" aria-label="${h.done?'Mark as not done':'Mark as done'}">✓</button>
+  </article>`;
+}
+function emptyBox(big,msg){return `<div class="empty-state"><div class="big">${big}</div>${msg}</div>`}
+
+function vToday(){
+  const d=new Date().getDay(), school=d<=4;
+  const todo=state.hw.filter(h=>!h.done).sort((a,b)=>a.due.localeCompare(b.due)||a.remindAt-b.remindAt);
+  const soon=todo.filter(h=>h.due<=key(addDays(new Date(),1)));
+  let classes='';
+  if(school){
+    classes=`<h2>Today’s classes <small>tap one to add homework</small></h2><div class="strip">`+
+      state.schedule[d].slice(0,state.periods).map((id,p)=>{const s=subj(id);
+        return s?`<button class="cls" data-cls="${d}-${p}" style="border-color:${s.color}"><div class="n">Period ${p+1}</div><div class="e">${s.emoji}</div><div class="s" dir="auto">${esc(s.name)}</div></button>`
+                :`<button class="cls empty" data-go="schedule"><div class="n">Period ${p+1}</div><div class="e">➕</div><div class="s">Set class</div></button>`}).join('')+`</div>`;
+  }else classes=`<h2>It’s the weekend! 🎈 <small>check if any homework is needed for Sunday</small></h2>`;
+  return `<button class="addbig" id="addBtn"><span class="plus">+</span>Add new homework</button>
+    ${trialBanner()}
+    ${classes}
+    ${nextRewardCard()}
+    <h2>Do these first <small>needed today & tomorrow</small></h2>
+    ${soon.length?`<div class="list">${soon.map(hwCard).join('')}</div>`:emptyBox('🌈','Nothing urgent right now. Time to play!')}`;
+}
+function vSchedule(){
+  const d=new Date().getDay();
+  let g=`<div class="sched"><div></div>`+DAYS.map(x=>`<div class="hd ${x.i===d?'now':''}">${x.s}</div>`).join('');
+  for(let p=0;p<state.periods;p++){
+    g+=`<div class="pn">${p+1}</div>`;
+    DAYS.forEach(x=>{
+      const s=subj(state.schedule[x.i][p]);
+      const cnt=s?state.hw.filter(h=>!h.done&&h.day===x.i&&h.period===p).length:0;
+      g+=s?`<button class="cell set" data-cell="${x.i}-${p}" style="--c:${s.color}">${cnt?`<span class="dot">${cnt}</span>`:''}<span class="e">${s.emoji}</span><span dir="auto">${esc(s.name)}</span></button>`
+          :`<button class="cell" data-cell="${x.i}-${p}" aria-label="Set class"><span class="addhint">+</span></button>`;
+    });
+  }
+  return `<h2>My school schedule</h2><p class="hintline">Tap a box to choose the class. Tap a class to add homework for it.</p><div class="gridwrap">${g}</div></div>`;
+}
+function vUpcoming(){
+  const todo=state.hw.filter(h=>!h.done).sort((a,b)=>a.due.localeCompare(b.due)||a.remindAt-b.remindAt);
+  if(!todo.length)return `<h2>Upcoming homework</h2>`+emptyBox('📒','No homework waiting. Add one with the big button!')+`<div style="height:14px"></div><button class="addbig" id="addBtn"><span class="plus">+</span>Add new homework</button>`;
+  const groups={};todo.forEach(h=>{const g=h.due<todayK()?'Late':relDay(h.due);(groups[g]=groups[g]||[]).push(h)});
+  return `<h2>Upcoming homework</h2>`+Object.entries(groups).map(([g,l])=>`<h2 style="font-size:21px">${g==='Late'?'⚠️ Late':'📅 '+g} <small>${l.length}</small></h2><div class="list">${l.map(hwCard).join('')}</div>`).join('');
+}
+function vDone(){
+  const done=state.hw.filter(h=>h.done).sort((a,b)=>b.doneAt-a.doneAt);
+  return `<h2>Finished homework <small>${done.length} done</small></h2>`+
+    (done.length?`<div class="list">${done.map(hwCard).join('')}</div>`:emptyBox('⭐','Finish a homework to earn your first star!'));
+}
+function render(){
+  header();
+  document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.v===view));
+  $('#view').innerHTML={today:vToday,schedule:vSchedule,upcoming:vUpcoming,done:vDone,rewards:vRewards}[view]();
+}
+
+/* ---------- Rewards ---------- */
+const RW_EMOJI=['🍦','🎁','🧸','🎨','🍕','🎬','🛍️','🎡','🏖️','🍫','📱','🦄','🎮','📚','💅','🌙'];
+const rwProg=r=>Math.max(0,Math.min(r.stars,state.stars-r.start));
+const rwReady=r=>!r.given&&rwProg(r)>=r.stars;
+function nextRewardCard(){
+  if(FREE)return '';
+  const open=(state.rewards||[]).filter(r=>!r.given);
+  if(!open.length)return '';
+  const r=open.slice().sort((a,b)=>(a.stars-rwProg(a))-(b.stars-rwProg(b)))[0];
+  const left=r.stars-rwProg(r);
+  return `<button class="nextrw" data-go="rewards"><span class="e">${r.emoji}</span><span style="flex:1"><span dir="auto">${esc(r.title)}</span><br><small style="color:var(--soft)">${left?`${left} more ${left>1?'stars':'star'} to go!`:'Ready! Show Mom or Dad 🎉'}</small></span><span style="font-size:26px">🎁</span></button>`;
+}
+function vRewards(){
+  const rs=state.rewards||[];
+  const open=rs.filter(r=>!r.given),given=rs.filter(r=>r.given).sort((a,b)=>b.givenAt-a.givenAt);
+  const card=r=>{const p=rwProg(r),pct=Math.round(p/r.stars*100);
+    return `<div class="rw ${rwReady(r)?'ready':''} ${r.given?'given':''}">
+      <div class="t"><span class="e">${r.emoji}</span><span dir="auto">${esc(r.title)}</span></div>
+      ${r.given?`<div class="meta">You got it on ${fmtDate(key(r.givenAt))} 💖</div>`:`
+      <div class="bar"><div class="fill" style="width:${pct}%"></div><span class="run" style="left:${Math.max(4,pct)}%">${MASCOT()}</span><span class="goal">${r.emoji}</span></div>
+      <div class="meta">${rwReady(r)?'🎉 You earned it! Show this to Mom or Dad.':`⭐ ${p} of ${r.stars} stars`}</div>`}
+    </div>`};
+  return `<h2>My rewards <small>finish homework to earn stars</small></h2>
+    ${open.length?`<div class="list">${open.map(card).join('')}</div>`:`<div class="empty-state"><span class="bigUni" style="width:120px;height:120px">${MASCOT()}</span>No rewards yet. Ask Mom or Dad to add one!</div>`}
+    ${given.length?`<h2>Rewards I got 💖</h2><div class="list">${given.map(card).join('')}</div>`:''}
+    <div style="height:18px"></div><button class="btn" id="parentBtn" style="width:100%">👨‍👩‍👧 Parents: manage rewards 🔒</button>`;
+}
+function pinGate(then){
+  const setting=!state.pin;
+  openSheet(`<h3>${setting?'Create a parent PIN 🔒':'Parents only 🔒'}</h3>
+    <p class="note" style="font-size:16px">${setting?'Choose 4 digits. Only parents can add rewards or mark them as given.':'Enter your 4-digit PIN.'}</p>
+    <input class="field pinput" id="p1" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="••••">
+    ${setting?`<div class="lbl">Type it again</div><input class="field pinput" id="p2" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="••••">`:''}
+    <div class="btns"><button class="btn" id="cancel">Cancel</button><button class="btn main" id="ok">${setting?'Save PIN':'Open'}</button></div>`,
+  (el,close)=>{
+    el.querySelector('#p1').focus();
+    el.querySelector('#cancel').onclick=close;
+    el.querySelector('#ok').onclick=()=>{
+      const a=el.querySelector('#p1').value.trim();
+      if(setting){const b=el.querySelector('#p2').value.trim();
+        if(!/^\d{4}$/.test(a)){toast('The PIN needs 4 digits');return}
+        if(a!==b){toast('The two PINs don’t match');return}
+        state.pin=a;save();close();then();
+      }else{if(a===state.pin){close();then()}else{toast('Wrong PIN');el.querySelector('#p1').value=''}}
+    };
+  });
+}
+function parentPanel(){
+  const rs=state.rewards||[];
+  openSheet(`<h3>Rewards for ${esc(nm())} 🎁</h3>
+    <div>${rs.length?rs.map(r=>`<div class="pr"><span class="e">${r.emoji}</span><span class="x" dir="auto">${esc(r.title)}<small>${r.given?'Given ✅':rwReady(r)?'Earned, waiting for you 🎉':`${rwProg(r)} / ${r.stars} stars`}</small></span>
+      ${rwReady(r)?`<button class="btn green" data-give="${r.id}">Mark as given</button>`:''}
+      <button class="btn red" data-delr="${r.id}">Delete</button></div>`).join(''):'<p class="note" style="font-size:16px">No rewards yet. Add the first one below.</p>'}</div>
+    <div class="lbl">New reward (English or عربي)</div>
+    <input class="field" id="rt" dir="auto" placeholder="Ice cream trip">
+    <div class="lbl">Picture</div><div class="emojis" id="re">${RW_EMOJI.map((e,i)=>`<button data-e="${e}" aria-pressed="${i===0}">${e}</button>`).join('')}</div>
+    <div class="lbl">Stars needed <small>(counted from today)</small></div>
+    <div class="opts" id="rs">${[3,5,10,15,20,30].map(n=>`<button class="opt" data-n="${n}" aria-pressed="${n===10}">⭐ ${n}</button>`).join('')}</div>
+    <div class="btns"><button class="btn" id="pin">Change PIN</button><button class="btn" id="cancel">Close</button><button class="btn main" id="add">Add reward</button></div>`,
+  (el,close)=>{
+    let em='🍦',n=10;
+    el.querySelector('#re').onclick=e=>{const b=e.target.closest('[data-e]');if(!b)return;em=b.dataset.e;press(el.querySelector('#re'),b)};
+    el.querySelector('#rs').onclick=e=>{const b=e.target.closest('[data-n]');if(!b)return;n=+b.dataset.n;press(el.querySelector('#rs'),b)};
+    el.querySelectorAll('[data-give]').forEach(b=>b.onclick=()=>{const r=state.rewards.find(x=>x.id===b.dataset.give);r.given=true;r.givenAt=Date.now();save();close();render();celebrate();parentPanel()});
+    el.querySelectorAll('[data-delr]').forEach(b=>b.onclick=()=>{state.rewards=state.rewards.filter(x=>x.id!==b.dataset.delr);save();close();render();parentPanel()});
+    el.querySelector('#cancel').onclick=close;
+    el.querySelector('#pin').onclick=()=>{state.pin=null;save();close();pinGate(parentPanel)};
+    el.querySelector('#add').onclick=()=>{
+      const t=el.querySelector('#rt').value.trim();if(!t){toast('Write the reward name');return}
+      state.rewards=state.rewards||[];
+      state.rewards.push({id:uid(),title:t,emoji:em,stars:n,start:state.stars,given:false,announced:false,created:Date.now()});
+      save();close();render();toast('Reward added 🎁');parentPanel();
+    };
+  });
+}
+function checkRewards(){
+  if(FREE)return;
+  const r=(state.rewards||[]).find(x=>rwReady(x)&&!x.announced);
+  if(!r)return;
+  r.announced=true;save();
+  setTimeout(()=>{
+    const a=document.createElement('div');a.className='alarm';a.setAttribute('role','alertdialog');
+    a.innerHTML=`<div class="box"><span class="bigUni">${MASCOT()}</span>
+      <h3>Yay ${esc(nm())}! You earned a reward!</h3>
+      <p style="font-size:44px;margin:6px 0">${r.emoji}</p><p dir="auto"><b>${esc(r.title)}</b></p>
+      <p style="color:var(--soft);font-size:17px">Show this to Mom or Dad 💖</p>
+      <div class="btns"><button class="btn pink" id="ok">Yay! 🎉</button></div></div>`;
+    document.body.appendChild(a);celebrate();playTune('xylo',2);
+    speak(`Wow ${nm()}! You earned a reward! ${r.title}`);
+    a.querySelector('#ok').onclick=()=>{a.remove();view='rewards';render()};
+  },1400);
+}
+const CHEERS=['You’re doing great!','Let’s do homework together!','I believe in you!','One task at a time 🌈','Stars make me sparkle ✨','High five! 🖐️'];
+
+/* ---------- Sheets ---------- */
+function openSheet(html,mount,sticky){
+  const sc=document.createElement('div');sc.className='scrim';
+  sc.innerHTML=`<div class="sheet" role="dialog" aria-modal="true">${html}</div>`;
+  if(!sticky)sc.addEventListener('click',e=>{if(e.target===sc)sc.remove()});
+  document.body.appendChild(sc);mount&&mount(sc.querySelector('.sheet'),()=>sc.remove());
+}
+function press(group,btn){group.querySelectorAll('[aria-pressed]').forEach(b=>b.setAttribute('aria-pressed','false'));btn.setAttribute('aria-pressed','true')}
+
+function dueOptions(){
+  const n=new Date();
+  return [{k:key(n),t:'Today'},{k:key(addDays(n,1)),t:'Tomorrow'},{k:key(addDays(n,2)),t:'Day after'}];
+}
+function defaultRemDay(due){
+  const k=due===todayK()?due:key(addDays(fromKey(due),-1));
+  return k<todayK()?todayK():k;
+}
+function remindTs(dayK,time='16:00'){
+  const rd=fromKey(dayK);const [hh,mm]=time.split(':').map(Number);rd.setHours(hh,mm,0,0);
+  if(rd.getTime()<Date.now()){const n=new Date(Date.now()+2*6e4);n.setSeconds(0,0);return n.getTime()}
+  return rd.getTime();
+}
+
+function hwSheet(opts={}){
+  const edit=opts.edit;
+  if(!edit&&trialBlocked()){activationSheet(lic&&lic.status==='invalid'?'invalid':'limit');return}
+  const nowDay=new Date().getDay();
+  let day=edit?edit.day:(opts.day??(nowDay<=4?nowDay:0));
+  let period=edit?edit.period:(opts.period??null);
+  let sid=edit?edit.subjectId:(period!=null?state.schedule[day][period]:null);
+  if(sid&&!subj(sid))sid=null;
+  let type=edit?(edit.type||'homework'):'homework';
+  const otherInit=edit?(edit.otherName||''):'';
+  const dues=dueOptions();
+  let due=edit?edit.due:dues[1].k;
+  let remDay=edit?key(edit.remindAt):defaultRemDay(due);
+  if(remDay<todayK())remDay=todayK();
+  let time=edit?new Date(edit.remindAt).toTimeString().slice(0,5):(state.lastTime||'16:00');
+  const TIMES=['13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'];
+  const tLabel=t=>{const[h,m]=t.split(':').map(Number);return `${h%12||12}:${String(m).padStart(2,'0')} ${h<12?'AM':'PM'}`};
+
+  openSheet(`<h3>${edit?'Edit homework ✏️':'New homework 📝'}</h3>
+
+    <div id="otherBox" ${type==='other'?'':'hidden'}><div class="lbl">📌 What do you need to do? (English or عربي)</div>
+      <input class="field" id="oth" dir="auto" maxlength="80" placeholder="Bring a family photo" value="${esc(otherInit)}"></div>
+    <div class="lbl">Which day did you get it?</div><div class="opts" id="dayO">${DAYS.map(d=>`<button class="opt" data-d="${d.i}" aria-pressed="${d.i===day}">${d.s}</button>`).join('')}</div>
+    <div class="lbl">Which class?</div><div class="opts" id="perO"></div>
+    <div class="lbl" id="subLbl">${type==='other'?'Subject (optional)':'Subject'}</div><div class="opts" id="subO"></div>
+    <button class="linkbtn" id="manage">✏️ Edit or delete subjects</button>
+    <div class="lbl" id="txtLbl">${type==='other'?'More details (optional)':'What’s the homework? (English or عربي)'}</div>
+    <textarea id="txt" dir="auto" placeholder="Page 24, questions 1 to 5">${esc(edit?edit.text:'')}</textarea>
+    <div class="lbl">When do you need it?</div><div class="opts" id="dueO"></div>
+    <div class="lbl">📅 Which day will you do it?</div><div class="opts" id="remO"></div>
+    <div class="lbl">⏰ What time should I remind you?</div>
+    <div class="opts" id="timO">${TIMES.map(t=>`<button class="opt" data-tm="${t}" aria-pressed="${t===time}">${tLabel(t)}</button>`).join('')}</div>
+    <div class="row" style="margin-top:12px">
+      <label class="opt" id="tmWrap" aria-pressed="${!TIMES.includes(time)}" style="display:flex;align-items:center;gap:8px">🕐 Other time
+        <input type="time" id="tm" value="${time}" style="border:0;background:transparent;font-size:20px;font-weight:700;color:inherit"></label>
+    </div>
+    <p class="note" id="remTxt" style="font-size:17px;font-weight:700"></p>
+    <div class="btns">${edit?`<button class="btn red" id="del">Delete</button>`:''}<button class="btn" id="cancel">Cancel</button><button class="btn main" id="ok">${edit?'Save changes ✅':'Add homework'}</button></div>`,
+  (el,close)=>{
+    const per=el.querySelector('#perO'),sub=el.querySelector('#subO');
+    const drawPer=()=>{per.innerHTML=state.schedule[day].slice(0,state.periods).map((id,p)=>{const s=subj(id);
+      return `<button class="opt" data-p="${p}" aria-pressed="${p===period}">${s?s.emoji:'•'} ${p+1}<small dir="auto">${s?esc(s.name):'no class'}</small></button>`}).join('')};
+    const drawSub=()=>{sub.innerHTML=state.subjects.map(s=>`<button class="subjbtn" style="--c:${s.color}" data-s="${s.id}" aria-pressed="${s.id===sid}">${s.emoji} <span dir="auto">${esc(s.name)}</span></button>`).join('')};
+    const dueO=el.querySelector('#dueO'),remO=el.querySelector('#remO');
+    // Built once: re-creating the date field while the iPad calendar is open closes the calendar.
+    dueO.innerHTML=dues.map(o=>`<button class="opt" data-k="${o.k}">${o.t}<small>${fmtDate(o.k)}</small></button>`).join('')+
+      `<label class="opt" id="ddWrap" style="display:flex;align-items:center;gap:8px;cursor:pointer">📅 <span><span id="ddTxt">Pick a date</span><small>other day</small></span>
+        <input type="date" id="dd" min="${todayK()}" style="border:2px solid var(--line);border-radius:12px;padding:6px 8px;background:var(--card);font-size:17px;font-weight:700;color:var(--ink);min-width:150px"></label>`;
+    const dd=dueO.querySelector('#dd'),ddWrap=dueO.querySelector('#ddWrap'),ddTxt=dueO.querySelector('#ddTxt');
+    const drawDue=()=>{
+      const inList=dues.some(o=>o.k===due);
+      dueO.querySelectorAll('[data-k]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.k===due)));
+      ddWrap.setAttribute('aria-pressed',String(!inList));
+      ddTxt.textContent=inList?'Pick a date':fmtDate(due);
+      if(!inList&&dd.value!==due)dd.value=due;
+    };
+    const onDate=()=>{if(!dd.value||dd.value<todayK()||dd.value===due)return;due=dd.value;remDay=defaultRemDay(due);drawDue();drawRem()};
+    dd.addEventListener('change',onDate);dd.addEventListener('blur',onDate);
+    const drawRem=()=>{
+      let days=[];for(let d=fromKey(todayK());key(d)<=due;d=addDays(d,1))days.push(key(d));
+      if(days.length>8)days=[days[0],days[1],...days.slice(-6)];
+      if(!days.includes(remDay))remDay=defaultRemDay(due);
+      remO.innerHTML=days.map(k=>`<button class="opt" data-r="${k}" aria-pressed="${k===remDay}">${relDay(k)}<small>${fromKey(k).toLocaleDateString('en-US',{weekday:'long'})}</small></button>`).join('');
+      remTxt();
+    };
+    const remTxt=()=>{const r=remindTs(remDay,el.querySelector('#tm').value||'16:00');el.querySelector('#remTxt').textContent=`⏰ I’ll remind you ${(d=>['Today','Tomorrow'].includes(d)?d.toLowerCase():'on '+d)(relDay(key(r)))} at ${fmtTime(r)}`+(r-Date.now()<3*6e4&&remDay===todayK()?' (that time already passed, so in 2 minutes)':'')};
+    el.querySelector('#manage').onclick=()=>subjectsSheet(()=>{if(sid&&!subj(sid))sid=null;drawPer();drawSub()});
+    drawPer();drawSub();drawDue();drawRem();
+    remO.onclick=e=>{const b=e.target.closest('[data-r]');if(!b)return;remDay=b.dataset.r;press(remO,b);remTxt()};
+    el.querySelector('#dayO').onclick=e=>{const b=e.target.closest('[data-d]');if(!b)return;day=+b.dataset.d;press(el.querySelector('#dayO'),b);period=null;drawPer()};
+    per.onclick=e=>{const b=e.target.closest('[data-p]');if(!b)return;period=+b.dataset.p;press(per,b);const s=state.schedule[day][period];if(s){sid=s;drawSub()}};
+    sub.onclick=e=>{const b=e.target.closest('[data-s]');if(!b)return;if(type==='other'&&sid===b.dataset.s){sid=null;b.setAttribute('aria-pressed','false');return}sid=b.dataset.s;press(sub,b)};
+    dueO.onclick=e=>{const b=e.target.closest('[data-k]');if(!b)return;due=b.dataset.k;dd.value='';remDay=defaultRemDay(due);drawDue();drawRem()};
+    const timO=el.querySelector('#timO'),tm=el.querySelector('#tm'),tmWrap=el.querySelector('#tmWrap');
+    timO.onclick=e=>{const b=e.target.closest('[data-tm]');if(!b)return;time=b.dataset.tm;tm.value=time;press(timO,b);tmWrap.setAttribute('aria-pressed','false');remTxt()};
+    tm.oninput=()=>{if(!tm.value)return;time=tm.value;timO.querySelectorAll('[data-tm]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tm===time)));tmWrap.setAttribute('aria-pressed',String(!TIMES.includes(time)));remTxt()};
+    if(el.querySelector('#typO'))el.querySelector('#typO').onclick=e=>{const b=e.target.closest('[data-t]');if(!b)return;type=b.dataset.t;press(el.querySelector('#typO'),b);
+      const o=type==='other';el.querySelector('#otherBox').hidden=!o;
+      el.querySelector('#subLbl').textContent=o?'Subject (optional)':'Subject';
+      el.querySelector('#txtLbl').textContent=o?'More details (optional)':'What’s the homework? (English or عربي)';
+      if(o)setTimeout(()=>el.querySelector('#oth').focus(),50)};
+    el.querySelector('#cancel').onclick=close;
+    if(edit)el.querySelector('#del').onclick=()=>{state.hw=state.hw.filter(h=>h.id!==edit.id);save();close();render();toast('Homework deleted')};
+    el.querySelector('#ok').onclick=()=>{
+      const text=el.querySelector('#txt').value.trim();
+      const isOther=type==='other',oth=el.querySelector('#oth').value.trim();
+      if(isOther&&!oth){toast('Write what you need to do 🙂');el.querySelector('#oth').focus();return}
+      if(!isOther&&!sid){toast('Pick a subject first 🙂');return}
+      if(!isOther&&!text){toast('Write what the homework is 🙂');el.querySelector('#txt').focus();return}
+      const s=sid?subj(sid):null,remindAt=remindTs(remDay,el.querySelector('#tm').value||'16:00');state.lastTime=el.querySelector('#tm').value||time;
+      const rec={type,otherName:isOther?oth:'',subjectId:s?sid:null,subjectName:s?s.name:oth,emoji:s?s.emoji:'📌',color:s?s.color:OTHER_COLOR,text,day,period,due,remindAt,nextAlert:remindAt};
+      if(edit)Object.assign(edit,rec);else{state.hw.push({id:uid(),done:false,created:Date.now(),...rec});if(!licOK())state.trialUsed=(state.trialUsed||0)+1}
+      save();close();render();yay();toast(edit?'Saved ✅':`Added! I’ll remind you ${relDay(key(remindAt)).toLowerCase()} at ${fmtTime(remindAt)} ⏰`);
+    };
+  });
+}
+
+const normName=n=>String(n||'').trim().replace(/\s+/g,' ').toLowerCase();
+const findSubjectByName=(n,exceptId)=>state.subjects.find(x=>x.id!==exceptId&&normName(x.name)===normName(n));
+function subjectUse(id){
+  let cls=0;DAYS.forEach(d=>(state.schedule[d.i]||[]).forEach(x=>{if(x===id)cls++}));
+  const hw=state.hw.filter(h=>h.subjectId===id&&!h.done).length;return {cls,hw};
+}
+function subjectsSheet(onDone){
+  const draw=()=>state.subjects.map(x=>{const u=subjectUse(x.id);
+    return `<div class="subrow" style="--c:${x.color}" data-row="${x.id}"><span class="e">${x.emoji}</span>
+      <span class="x" dir="auto">${esc(x.name)}<small>${u.cls?`${u.cls} ${u.cls>1?'classes':'class'} in schedule`:'not in schedule'}${u.hw?` · ${u.hw} homework`:''}</small></span>
+      <button class="mini" data-sedit="${x.id}">✏️ Edit</button><button class="mini red" data-sdel="${x.id}">🗑️ Delete</button></div>`}).join('');
+  openSheet(`<h3>My subjects 📚</h3>
+    <p class="note" style="font-size:16px">Rename a subject, change its picture, or delete one you added by mistake.</p>
+    <div id="sl">${draw()}</div>
+    <div class="lbl">Add a new subject (English or عربي)</div>
+    <input class="field" id="nn" dir="auto" placeholder="Subject name">
+    <div class="emojis" id="emO" style="margin-top:10px">${EMOJIS.map((e,i)=>`<button data-e="${e}" aria-pressed="${i===17}">${e}</button>`).join('')}</div>
+    <div class="btns"><button class="btn" id="cancel">Done</button><button class="btn main" id="mk">Add subject</button></div>`,
+  (el,close)=>{
+    let em='📝';const sl=el.querySelector('#sl');
+    const finish=()=>{close();render();onDone&&onDone()};
+    el.querySelector('#cancel').onclick=finish;
+    el.parentElement.addEventListener('click',e=>{if(e.target===el.parentElement)onDone&&onDone()});
+    el.querySelector('#emO').onclick=e=>{const b=e.target.closest('[data-e]');if(!b)return;em=b.dataset.e;press(el.querySelector('#emO'),b)};
+    el.querySelector('#mk').onclick=()=>{
+      const n=el.querySelector('#nn').value.trim();if(!n){toast('Type the subject name first');return}
+      if(findSubjectByName(n)){toast(`“${n}” is already in your subjects`);return}
+      state.subjects.push({id:uid(),name:n,emoji:em,color:PALETTE[state.subjects.length%PALETTE.length]});
+      save();el.querySelector('#nn').value='';sl.innerHTML=draw();toast('Subject added ✅');
+    };
+    sl.onclick=e=>{
+      const ed=e.target.closest('[data-sedit]'),dl=e.target.closest('[data-sdel]'),sv=e.target.closest('[data-ssave]');
+      if(ed){const x=subj(ed.dataset.sedit);const row=el.querySelector(`[data-row="${x.id}"]`);
+        row.outerHTML=`<div class="subrow" style="--c:${x.color};flex-wrap:wrap" data-row="${x.id}">
+          <input class="field" id="en" dir="auto" value="${esc(x.name)}" style="flex:1;min-width:180px;font-size:18px;padding:8px 14px">
+          <button class="mini" data-ssave="${x.id}" style="background:var(--grape);color:#fff;border-color:var(--grape)">Save</button>
+          <div class="emojis" id="ee" style="width:100%">${EMOJIS.map(e=>`<button data-e="${e}" aria-pressed="${e===x.emoji}">${e}</button>`).join('')}</div></div>`;
+        const ee=el.querySelector('#ee');ee.onclick=ev=>{const b=ev.target.closest('[data-e]');if(!b)return;press(ee,b)};
+        el.querySelector('#en').focus();return}
+      if(sv){const x=subj(sv.dataset.ssave);const n=el.querySelector('#en').value.trim();
+        if(!n){toast('Type the subject name');return}
+        if(findSubjectByName(n,x.id)){toast(`“${n}” is already in your subjects`);return}
+        const pe=el.querySelector('#ee [aria-pressed="true"]');
+        x.name=n;if(pe)x.emoji=pe.dataset.e;
+        state.hw.forEach(h=>{if(h.subjectId===x.id){h.subjectName=x.name;h.emoji=x.emoji}});
+        save();sl.innerHTML=draw();toast('Saved ✅');return}
+      if(dl){const x=subj(dl.dataset.sdel);const u=subjectUse(x.id);
+        const msg=`Delete “${x.name}”?`+(u.cls?`\nIt will be removed from ${u.cls} ${u.cls>1?'classes':'class'} in your schedule.`:'')+(u.hw?`\nYour ${u.hw} homework will stay, with the old name.`:'');
+        const twin=findSubjectByName(x.name,x.id);
+        if(!twin&&!confirm(msg))return;
+        state.subjects=state.subjects.filter(y=>y.id!==x.id);
+        DAYS.forEach(d=>{state.schedule[d.i]=(state.schedule[d.i]||[]).map(y=>y===x.id?(twin?twin.id:null):y)});
+        if(twin)state.hw.forEach(h=>{if(h.subjectId===x.id){h.subjectId=twin.id;h.subjectName=twin.name;h.emoji=twin.emoji;h.color=twin.color}});
+        save();sl.innerHTML=draw();toast(twin?`Duplicate removed. Its classes now use the other “${twin.name}” ✅`:'Subject deleted');}
+    };
+  });
+}
+function cellSheet(d,p){
+  const cur=state.schedule[d][p];const s=subj(cur);
+  openSheet(`<h3>${DAYS[d].n}, period ${p+1}</h3>
+    ${s?`<button class="addbig" id="addHere" style="background:${s.color};box-shadow:none"><span class="plus" style="color:${s.color}">+</span>Add ${esc(s.name)} homework</button>`:''}
+    <div class="lbl">${s?'Change the class':'Choose the class'}</div>
+    <div class="opts" id="subO">${state.subjects.map(x=>`<button class="subjbtn" style="--c:${x.color}" data-s="${x.id}" aria-pressed="${x.id===cur}">${x.emoji} <span dir="auto">${esc(x.name)}</span></button>`).join('')}</div>
+    <button class="linkbtn" id="manage">✏️ Edit or delete subjects</button>
+    <div class="lbl">Or make a new subject</div>
+    <div class="row"><input class="field" id="nn" dir="auto" placeholder="Subject name (English or عربي)" style="flex:1;min-width:200px"></div>
+    <div class="emojis" id="emO" style="margin-top:10px">${EMOJIS.map((e,i)=>`<button data-e="${e}" aria-pressed="${i===17}">${e}</button>`).join('')}</div>
+    <div class="btns">${cur?`<button class="btn red" id="clr">Clear box</button>`:''}<button class="btn" id="cancel">Close</button><button class="btn main" id="mk">Save new subject</button></div>`,
+  (el,close)=>{
+    let em='📝';
+    el.querySelector('#subO').onclick=e=>{const b=e.target.closest('[data-s]');if(!b)return;state.schedule[d][p]=b.dataset.s;save();close();render();yay()};
+    el.querySelector('#emO').onclick=e=>{const b=e.target.closest('[data-e]');if(!b)return;em=b.dataset.e;press(el.querySelector('#emO'),b)};
+    el.querySelector('#manage').onclick=()=>{close();subjectsSheet(()=>cellSheet(d,p))};
+    el.querySelector('#cancel').onclick=close;
+    if(cur)el.querySelector('#clr').onclick=()=>{state.schedule[d][p]=null;save();close();render()};
+    if(s)el.querySelector('#addHere').onclick=()=>{close();hwSheet({day:d,period:p})};
+    el.querySelector('#mk').onclick=()=>{
+      const n=el.querySelector('#nn').value.trim();if(!n){toast('Type the subject name first');return}
+      const dup=findSubjectByName(n);if(dup){state.schedule[d][p]=dup.id;save();close();render();toast(`“${dup.name}” was already there, so I used it`);return}
+      const ns={id:uid(),name:n,emoji:em,color:PALETTE[state.subjects.length%PALETTE.length]};
+      state.subjects.push(ns);state.schedule[d][p]=ns.id;save();close();render();yay();
+    };
+  });
+}
+
+function settingsSheet(){
+  openSheet(`<h3>Settings ⚙️</h3>
+    <div class="lbl">Student</div><div class="field" style="font-weight:800;unicode-bidi:plaintext" dir="auto">👤 ${esc(state.name)}</div>
+    <p class="note">The free version is for one student.</p>
+    <div class="lbl">Subjects</div><button class="btn" id="subs" style="width:100%">📚 My subjects: edit or delete</button>
+    <div class="lbl">Classes per day</div><div class="opts" id="pO">${[5,6,7,8,9].map(n=>`<button class="opt" data-n="${n}" aria-pressed="${n===state.periods}">${n}</button>`).join('')}</div>
+    <div class="lbl">Talking reminder</div><div class="opts" id="vO"><button class="opt" data-v="1" aria-pressed="${state.voice}">🗣️ On</button><button class="opt" data-v="0" aria-pressed="${!state.voice}">🔇 Off</button></div>
+    <button class="btn" id="up" style="width:100%;margin-top:16px;border-color:#FFD43B;background:color-mix(in srgb,#FFD43B 22%,var(--card))">⭐ Get the full version</button>
+    <div class="btns"><button class="btn pink" id="test">Test the alarm 🔔</button><button class="btn main" id="ok">Done</button></div>
+    <p class="note">For alarms to ring, keep this page open on the iPad with the volume up and the side switch off silent. Tap “Keep awake” so the screen doesn’t turn off.</p>`,
+  (el,close)=>{
+    el.querySelector('#pO').onclick=e=>{const b=e.target.closest('[data-n]');if(!b)return;state.periods=+b.dataset.n;press(el.querySelector('#pO'),b);DAYS.forEach(d=>{while(state.schedule[d.i].length<state.periods)state.schedule[d.i].push(null)});save()};
+    if(el.querySelector('#sO'))el.querySelector('#sO').onclick=e=>{const b=e.target.closest('[data-t]');if(!b)return;state.sound=b.dataset.t;press(el.querySelector('#sO'),b);playTune(state.sound);save()};
+    el.querySelector('#vO').onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;state.voice=b.dataset.v==='1';press(el.querySelector('#vO'),b);save()};
+    el.querySelector('#up').onclick=()=>{close();upgradeSheet()};
+    el.querySelector('#subs').onclick=()=>{close();subjectsSheet()};
+    el.querySelector('#test').onclick=()=>{playTune(state.sound,2);speak(`${nm()}! It's homework time!`)};
+    el.querySelector('#ok').onclick=()=>{save();close();render()};
+  });
+}
+
+/* ---------- Done / confetti ---------- */
+function toggleDone(id){
+  const h=state.hw.find(x=>x.id===id);if(!h)return;
+  if(!h.done){h.done=true;h.doneAt=Date.now();state.stars++;save();render();celebrate();
+    const praise=['Great job','Awesome','You did it','Super star','Well done'][Math.floor(Math.random()*5)];
+    toast(`${praise}, ${nm()}! +1 ${TH().emoji}`);speak(`${praise}, ${nm()}!`);
+    if(state.stars%5===0)setTimeout(()=>toast(`New level: ${level(state.stars)}`),1600);
+    hop();checkRewards();
+  }else{h.done=false;h.doneAt=null;state.stars=Math.max(0,state.stars-1);h.nextAlert=Math.max(h.remindAt,Date.now()+6e4);save();render()}
+}
+function celebrate(){
+  yay();
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const c=$('#confetti'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;
+  const cols=['#FF5FA8','#7B5CFF','#1FBF9F','#FFC23C','#2D9CDB'];
+  const ps=Array.from({length:140},()=>({x:innerWidth/2,y:innerHeight*.45,vx:(Math.random()-.5)*16,vy:Math.random()*-16-4,s:6+Math.random()*8,c:cols[Math.random()*5|0],r:Math.random()*6,star:Math.random()<.3}));
+  let f=0;(function tick(){x.clearRect(0,0,c.width,c.height);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.45;p.r+=.1;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;
+    if(p.star){x.font=`${p.s*2}px sans-serif`;x.fillText('★',0,0)}else x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);x.restore()});
+    if(++f<110)requestAnimationFrame(tick);else x.clearRect(0,0,c.width,c.height)})();
+}
+function confirmDelete(h){
+  const L=hwLook(h);
+  openSheet(`<div style="text-align:center"><span class="bigUni" style="width:110px;height:110px;border-radius:50%;background:var(--ring);overflow:hidden;padding:8px 5px 0">${MASCOT()}</span>
+    <h3 style="margin-top:10px">Delete this homework?</h3>
+    <p style="font-size:19px;margin:0 0 4px" dir="auto"><b>${L.emoji} ${esc(L.title)}</b></p>
+    ${h.text?`<p style="font-size:17px;color:var(--soft);margin:0" dir="auto">${esc(h.text)}</p>`:''}
+    ${h.done?`<p class="note">Don’t worry, you keep your star ⭐</p>`:''}</div>
+    <div class="btns"><button class="btn" id="cancel">No, keep it</button><button class="btn red" id="yes" style="background:var(--danger);color:#fff">🗑️ Yes, delete</button></div>`,
+  (el,close)=>{
+    el.querySelector('#cancel').onclick=close;
+    el.querySelector('#yes').onclick=()=>{state.hw=state.hw.filter(x=>x.id!==h.id);save();close();render();toast('Homework deleted')};
+  });
+}
+function hop(){const u=$('#uniHead');u.classList.remove('happy');void u.offsetWidth;u.classList.add('happy')}
+function toast(m){document.querySelectorAll('.toast').forEach(t=>t.remove());const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3200)}
+
+/* ---------- Alarms ---------- */
+function checkAlarms(){
+  if(alerting||$('#splash'))return;
+  const now=Date.now();
+  const h=state.hw.filter(x=>!x.done&&x.nextAlert&&x.nextAlert<=now).sort((a,b)=>a.nextAlert-b.nextAlert)[0];
+  if(h)showAlarm(h);
+}
+function showAlarm(h){
+  alerting=h.id;h.nextAlert=Date.now()+10*6e4;save();
+  const L=hwLook(h),T=typ(h.type);
+  const a=document.createElement('div');a.className='alarm';a.setAttribute('role','alertdialog');
+  a.innerHTML=`<div class="box"><span class="bigUni">${MASCOT()}</span>
+    <h3>${esc(nm())}! It’s ${T.exam?'study':h.type==='other'?'task':'homework'} time! ⏰</h3>
+    <p><b dir="auto">${L.emoji} ${h.type==='other'?esc(L.title)+(L.subject?' · '+esc(L.subject):''):esc(L.title)+' '+T.name}</b></p>
+    <p dir="auto">${esc(h.text)}</p>
+    <p style="color:var(--soft);font-size:17px">Needed ${relDay(h.due).toLowerCase()}</p>
+    <div class="btns">
+      <button class="btn green" id="aDone">I finished it! ⭐</button>
+      <button class="btn main" id="aStart">I’m starting now 💪</button>
+      <button class="btn" id="aSnooze">Remind me in 10 minutes</button>
+      <button class="btn" id="aEdit">✏️ Change time or details</button>
+    </div></div>`;
+  document.body.appendChild(a);
+  playTune(state.sound,3);
+  setTimeout(()=>speak(h.type==='other'
+    ?(hasArabic(L.title)?`${nm()}! It's time for your task!`:`${nm()}! Time for your task: ${L.title}!`)
+    :`${nm()}! It's time to ${T.say} ${hasArabic(L.title)?'':L.title+' '}${T.word}!`),1800);
+  const close=()=>{a.remove();alerting=null;speechSynthesis&&speechSynthesis.cancel()};
+  a.querySelector('#aDone').onclick=()=>{close();toggleDone(h.id)};
+  a.querySelector('#aStart').onclick=()=>{h.nextAlert=Date.now()+30*6e4;save();close();render();toast('You got this! I’ll check again in 30 minutes 💪')};
+  a.querySelector('#aEdit').onclick=()=>{close();hwSheet({edit:h})};
+  a.querySelector('#aSnooze').onclick=()=>{h.nextAlert=Date.now()+10*6e4;save();close();render();toast('Okay! Back in 10 minutes ⏰')};
+}
+
+/* ---------- Events ---------- */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button');if(!t)return;
+  if(t.classList.contains('tab')){view=t.dataset.v;render();scrollTo({top:0,behavior:'smooth'});return}
+  if(t.id==='addBtn')return hwSheet();
+  if(t.id==='setBtn')return settingsSheet();
+  if(t.id==='wakeBtn')return toggleWake();
+  if(t.id==='upFoot')return upgradeSheet();
+  if(t.id==='parentBtn')return pinGate(parentPanel);
+  if(t.id==='trialBtn')return activationSheet(lic&&lic.status==='invalid'?'invalid':trialLeft()?'manual':'limit');
+  if(t.id==='syncPill'){syncNow().then(()=>toast(syncErr?'⚠️ '+syncErr:'Synced ✓'));return}
+  if(t.id==='uniHead'){hop();const m=CHEERS[Math.random()*CHEERS.length|0];$('#sub').textContent=m;playTune('bubbles');speak(m.replace(/[^\w\s!’']/g,''));setTimeout(header,5000);return}
+  if(t.dataset.done)return toggleDone(t.dataset.done);
+  if(t.dataset.del){const h=state.hw.find(x=>x.id===t.dataset.del);if(h)confirmDelete(h);return}
+  if(t.dataset.edit){const h=state.hw.find(x=>x.id===t.dataset.edit);if(h)hwSheet({edit:h});return}
+  if(t.dataset.go){view=t.dataset.go;render();return}
+  if(t.dataset.cls){const[d,p]=t.dataset.cls.split('-').map(Number);return hwSheet({day:d,period:p})}
+  if(t.dataset.cell){const[d,p]=t.dataset.cell.split('-').map(Number);return cellSheet(d,p)}
+});
+document.addEventListener('pointerdown',unlockAudio,{passive:true});
+$('#startBtn').onclick=()=>{unlockAudio();playTune('chime');$('#splash').remove();if(!state.name&&!licOK()){onboarding();return}speak(`Hi ${nm()}! Let's check your homework.`);setTimeout(checkAlarms,1500)};
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){render();checkAlarms();syncNow();if($('#wakeBtn').classList.contains('on')&&!wakeLock)toggleWake()}});
+
+/* ---------- Start ---------- */
+loadLocal();prune();snap();render();initCloud();
+setInterval(checkAlarms,10000);
+setInterval(header,60000);
+</script>
+</body>
+</html>

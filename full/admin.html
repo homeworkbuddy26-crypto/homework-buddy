@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Homework Buddy — لوحة الإدارة</title>
+<link rel="icon" type="image/png" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F1ECFF;--card:#fff;--ink:#2E1A47;--soft:#5E4A7A;--line:#E4DBFA;--grape:#6A45F5;--pink:#D6337A;--mint:#0E8F76;--sun:#FFC23C;--red:#D93838;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root{--bg:#1B1230;--card:#2A1F45;--ink:#F6F0FF;--soft:#BBA9DA;--line:#3D2F63}}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Baloo Bhaijaan 2",Tahoma,"Segoe UI",sans-serif}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+.wrap{max-width:1150px;margin:0 auto;padding:20px}
+h1{font-size:32px;margin:0}
+h2{font-size:22px;margin:0 0 12px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.card{background:var(--card);border:3px solid var(--line);border-radius:24px;padding:18px 20px;margin-bottom:18px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.stat{background:var(--card);border:3px solid var(--line);border-radius:20px;padding:12px 16px}
+.stat b{display:block;font-size:30px;line-height:1.1}
+.stat span{color:var(--soft);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;align-items:end}
+label{display:flex;flex-direction:column;gap:4px;font-weight:700;color:var(--soft);font-size:15px}
+input,select{border:2px solid var(--line);background:var(--bg);border-radius:14px;padding:9px 12px;font-size:16px;color:var(--ink)}
+input:focus,select:focus{outline:3px solid var(--grape);outline-offset:1px}
+.btn{border:0;border-radius:14px;padding:10px 16px;font-weight:800;background:var(--line);color:var(--ink)}
+.btn.main{background:var(--grape);color:#fff}
+.btn.green{background:var(--mint);color:#fff}
+.btn.red{background:transparent;color:var(--red);border:2px solid var(--red)}
+.btn.sm{padding:5px 10px;font-size:14px;border-radius:10px}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:900px}
+th,td{padding:10px 8px;border-bottom:2px solid var(--line);text-align:right;vertical-align:top;font-size:15px}
+th{color:var(--soft);font-size:14px}
+.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;direction:ltr;unicode-bidi:isolate;white-space:nowrap}
+.badge{display:inline-block;border-radius:99px;padding:1px 10px;font-weight:800;font-size:13px;white-space:nowrap}
+.b-new{background:#E3F0FF;color:#1F5BA8}.b-on{background:#DDF5EF;color:#0B6E5B}.b-off{background:#FDE2E2;color:#A12626}.b-exp{background:#FFF1CF;color:#8A5A00}
+.acts{display:flex;flex-wrap:wrap;gap:6px}
+.muted{color:var(--soft);font-size:13px}
+.new-codes{background:#DDF5EF;border-color:var(--mint)}
+.new-codes .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:6px 0;border-bottom:1px dashed var(--mint)}
+#login{max-width:420px;margin:12vh auto}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--card);padding:10px 18px;border-radius:99px;font-weight:700;z-index:9}
+.err{color:var(--red);font-weight:700;min-height:1.2em}
+@media (max-width:700px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<div id="login" class="card" hidden>
+  <h1>📒 Homework Buddy</h1>
+  <p class="muted" style="font-size:16px">لوحة إدارة أكواد التفعيل</p>
+  <label>كلمة المرور<input type="password" id="pw" autocomplete="current-password" dir="ltr"></label>
+  <p class="err" id="lerr"></p>
+  <button class="btn main" id="lbtn" style="width:100%">دخول</button>
+</div>
+
+<div class="wrap" id="app" hidden>
+  <div class="top">
+    <h1>📒 Homework Buddy — أكواد التفعيل</h1>
+    <div class="acts"><button class="btn" id="refresh">🔄 تحديث</button><button class="btn" id="logout">خروج</button></div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="card">
+    <h2>➕ إنشاء أكواد جديدة</h2>
+    <div class="grid">
+      <label>اسم العميل<input id="cCustomer" placeholder="مثال: أبو محمد"></label>
+      <label>ملاحظة<input id="cNote" placeholder="مثال: دفع تحويل بنكي"></label>
+      <label>مدة الصلاحية<select id="cDays"><option value="0">بدون انتهاء</option><option value="30">شهر</option><option value="90">3 أشهر</option><option value="180">6 أشهر</option><option value="365" selected>سنة</option></select></label>
+      <label>عدد الأجهزة المسموح<select id="cMax"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></label>
+      <label>عدد الأكواد<input id="cCount" type="number" min="1" max="50" value="1"></label>
+      <button class="btn main" id="create">إنشاء</button>
+    </div>
+  </div>
+
+  <div class="card new-codes" id="newBox" hidden></div>
+
+  <div class="card">
+    <div class="top" style="margin-bottom:8px">
+      <h2 style="margin:0">📋 كل الأكواد</h2>
+      <input id="q" placeholder="🔍 بحث بالكود أو العميل أو اسم الطالب" style="min-width:280px">
+    </div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>الكود</th><th>العميل / الطالب</th><th>الحالة</th><th>الأجهزة</th><th>الواجبات</th><th>تاريخ الإنشاء</th><th>آخر استخدام</th><th>الانتهاء</th><th>إجراءات</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <h2>⚙️ إعدادات التطبيق</h2>
+    <div class="grid">
+      <label>عدد الواجبات في النسخة التجريبية<input id="sTrial" type="number" min="0" max="20"></label>
+      <label>رقم واتساب لطلب الكود (مع رمز الدولة)<input id="sWa" dir="ltr" placeholder="9665XXXXXXXX"></label>
+      <label style="grid-column:span 2">نص السعر الذي يظهر للعميل<input id="sPrice" placeholder="مثال: الاشتراك السنوي 49 ريال"></label>
+      <button class="btn main" id="saveCfg">حفظ الإعدادات</button>
+    </div>
+    <hr style="border:0;border-top:2px solid var(--line);margin:18px 0">
+    <div class="grid">
+      <label>كلمة مرور جديدة للوحة (10 أحرف على الأقل)<input id="newPw" type="password" dir="ltr" autocomplete="new-password"></label>
+      <button class="btn" id="chPw">تغيير كلمة المرور</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SB_URL='https://tpwzflhnsncwnhddnfqz.supabase.co';
+const SB_KEY='sb_publishable_3TAz5OaFcP7B1178f2LDvQ_ILGgpHir';
+const APP_URL=new URL('./',location.href).href;
+let PW=sessionStorage.getItem('luna-admin')||'',rows=[];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function rpc(fn,args){
+  const r=await fetch(`${SB_URL}/rest/v1/rpc/${fn}`,{method:'POST',headers:{apikey:SB_KEY,'Content-Type':'application/json'},body:JSON.stringify(args)});
+  const t=await r.text();if(!r.ok){let m=t;try{m=JSON.parse(t).message}catch(e){}throw new Error(m)}return t?JSON.parse(t):null;
+}
+function toast(m){document.querySelectorAll('.toast').forEach(t=>t.remove());const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2600)}
+const fmt=d=>d?new Date(d).toLocaleDateString('ar-SA-u-ca-gregory',{day:'numeric',month:'short',year:'numeric'}):'—';
+const fmtT=d=>d?new Date(d).toLocaleString('ar-SA-u-ca-gregory',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}):'—';
+function status(r){
+  if(r.revoked)return ['b-off','موقوف'];
+  if(r.expires_at&&new Date(r.expires_at)<new Date())return ['b-exp','منتهي'];
+  if(r.activated_at)return ['b-on','مفعّل'];
+  return ['b-new','غير مستخدم'];
+}
+function message(r){
+  return `مرحباً${r.customer?' '+r.customer:''} 👋
+كود تفعيل تطبيق Homework Buddy للواجبات 📒:
+${r.code}
+
+رابط التطبيق: ${APP_URL}
+
+طريقة التفعيل: افتح التطبيق ← ⚙️ الإعدادات ← 🔑 Activate Homework Buddy ← أدخل الكود.
+يمكن استخدام نفس الكود على ${r.max_devices} أجهزة (آيباد الطالب وجوالات الوالدين) لمشاركة الواجبات.${r.expires_at?`
+صالح حتى: ${fmt(r.expires_at)}`:''}`;
+}
+async function copy(t){try{await navigator.clipboard.writeText(t);toast('تم النسخ ✅')}catch(e){prompt('انسخ النص:',t)}}
+function draw(){
+  const q=$('#q').value.trim().toLowerCase();
+  const list=rows.filter(r=>!q||[r.code,r.customer,r.student,r.note].some(x=>(x||'').toLowerCase().includes(q)));
+  const c={all:rows.length,on:0,new:0,off:0};rows.forEach(r=>{const s=status(r)[1];if(s==='مفعّل')c.on++;else if(s==='غير مستخدم')c.new++;else c.off++});
+  $('#stats').innerHTML=`<div class="stat"><b>${c.all}</b><span>كل الأكواد</span></div><div class="stat"><b>${c.on}</b><span>مفعّلة</span></div><div class="stat"><b>${c.new}</b><span>لم تُستخدم بعد</span></div><div class="stat"><b>${c.off}</b><span>موقوفة أو منتهية</span></div>`;
+  $('#rows').innerHTML=list.map(r=>{const [cls,txt]=status(r);return `<tr>
+    <td><span class="code">${esc(r.code)}</span>${r.note?`<div class="muted">${esc(r.note)}</div>`:''}</td>
+    <td>${esc(r.customer||'—')}${r.student?`<div class="muted">الطالب: <span dir="auto">${esc(r.student)}</span></div>`:''}</td>
+    <td><span class="badge ${cls}">${txt}</span></td>
+    <td>${r.devices} / ${r.max_devices}</td>
+    <td>${r.homework}</td>
+    <td>${fmt(r.created_at)}</td>
+    <td>${fmtT(r.last_seen)}</td>
+    <td>${r.expires_at?fmt(r.expires_at):'بدون'}</td>
+    <td><div class="acts">
+      <button class="btn sm" data-a="copy" data-c="${esc(r.code)}">نسخ الكود</button>
+      <button class="btn sm green" data-a="msg" data-c="${esc(r.code)}">رسالة للعميل</button>
+      <button class="btn sm" data-a="wa" data-c="${esc(r.code)}">واتساب</button>
+      <button class="btn sm" data-a="extend" data-c="${esc(r.code)}">تمديد</button>
+      <button class="btn sm" data-a="reset" data-c="${esc(r.code)}" title="حذف الأجهزة المسجلة ليعاد التفعيل">تصفير الأجهزة</button>
+      <button class="btn sm ${r.revoked?'green':'red'}" data-a="${r.revoked?'restore':'revoke'}" data-c="${esc(r.code)}">${r.revoked?'إعادة تشغيل':'إيقاف'}</button>
+      <button class="btn sm red" data-a="del" data-c="${esc(r.code)}">حذف</button>
+    </div></td></tr>`}).join('')||`<tr><td colspan="9" class="muted" style="text-align:center;padding:24px">لا توجد أكواد بعد</td></tr>`;
+}
+async function load(){
+  try{rows=await rpc('admin_list',{p_pw:PW});draw()}catch(e){toast('تعذر التحميل: '+e.message)}
+  try{const c=await rpc('admin_get_config',{p_pw:PW});$('#sTrial').value=c.trial_limit||'2';$('#sWa').value=c.contact_whatsapp||'';$('#sPrice').value=c.price_text||''}catch(e){}
+}
+async function login(pw){
+  const ok=await rpc('admin_login',{p_pw:pw});
+  if(!ok)return false;PW=pw;sessionStorage.setItem('luna-admin',pw);$('#login').hidden=true;$('#app').hidden=false;load();return true;
+}
+$('#lbtn').onclick=async()=>{$('#lerr').textContent='';try{if(!await login($('#pw').value))$('#lerr').textContent='كلمة المرور غير صحيحة'}catch(e){$('#lerr').textContent='تعذر الاتصال بالخادم'}};
+$('#pw').addEventListener('keydown',e=>{if(e.key==='Enter')$('#lbtn').click()});
+$('#logout').onclick=()=>{sessionStorage.removeItem('luna-admin');location.reload()};
+$('#refresh').onclick=load;
+$('#q').oninput=draw;
+$('#create').onclick=async()=>{
+  const b=$('#create');b.disabled=true;
+  try{
+    const n=Math.max(1,Math.min(50,parseInt($('#cCount').value,10)||1));
+    const codes=await rpc('admin_create_codes',{p_pw:PW,p_count:n,p_customer:$('#cCustomer').value,p_note:$('#cNote').value,p_days:parseInt($('#cDays').value,10),p_max_devices:parseInt($('#cMax').value,10)});
+    await load();
+    const made=rows.filter(r=>codes.includes(r.code));
+    $('#newBox').hidden=false;
+    $('#newBox').innerHTML=`<h2>✅ تم إنشاء ${made.length} ${made.length>1?'أكواد':'كود'}</h2>`+made.map(r=>`<div class="row"><span class="code" style="font-size:20px">${esc(r.code)}</span>
+      <button class="btn sm" data-a="copy" data-c="${esc(r.code)}">نسخ الكود</button><button class="btn sm green" data-a="msg" data-c="${esc(r.code)}">نسخ رسالة العميل</button><button class="btn sm" data-a="wa" data-c="${esc(r.code)}">إرسال واتساب</button></div>`).join('');
+    $('#cCustomer').value='';$('#cNote').value='';$('#cCount').value='1';
+  }catch(e){toast('خطأ: '+e.message)}
+  b.disabled=false;
+};
+document.addEventListener('click',async e=>{
+  const b=e.target.closest('[data-a]');if(!b)return;
+  const r=rows.find(x=>x.code===b.dataset.c);if(!r)return;
+  const a=b.dataset.a;
+  try{
+    if(a==='copy')return copy(r.code);
+    if(a==='msg')return copy(message(r));
+    if(a==='wa')return window.open('https://wa.me/?text='+encodeURIComponent(message(r)),'_blank');
+    if(a==='extend'){const d=prompt('كم يوماً تريد إضافتها؟ (مثال: 30 أو 365)\nاكتب 0 لإلغاء تاريخ الانتهاء نهائياً','365');if(d===null)return;
+      await rpc('admin_update',{p_pw:PW,p_code:r.code,p_patch:{expires_days:parseInt(d,10)||0}});toast('تم التحديث');}
+    if(a==='reset'){if(!confirm(`تصفير الأجهزة المسجلة على ${r.code}؟\nسيحتاج العميل لإدخال الكود من جديد على أجهزته. البيانات لا تُحذف.`))return;
+      await rpc('admin_update',{p_pw:PW,p_code:r.code,p_patch:{reset_devices:true}});toast('تم تصفير الأجهزة');}
+    if(a==='revoke'){if(!confirm(`إيقاف الكود ${r.code}؟ سيتوقف التطبيق عن إضافة الواجبات لدى العميل.`))return;
+      await rpc('admin_update',{p_pw:PW,p_code:r.code,p_patch:{revoked:true}});toast('تم الإيقاف');}
+    if(a==='restore'){await rpc('admin_update',{p_pw:PW,p_code:r.code,p_patch:{revoked:false}});toast('تمت إعادة التشغيل');}
+    if(a==='del'){if(!confirm(`حذف الكود ${r.code} نهائياً مع بيانات الطالب المرتبطة به؟ لا يمكن التراجع.`))return;
+      await rpc('admin_delete',{p_pw:PW,p_code:r.code});toast('تم الحذف');}
+    load();
+  }catch(err){toast('خطأ: '+err.message)}
+});
+$('#saveCfg').onclick=async()=>{
+  try{
+    await rpc('admin_set_config',{p_pw:PW,p_key:'trial_limit',p_value:String(Math.max(0,parseInt($('#sTrial').value,10)||0))});
+    await rpc('admin_set_config',{p_pw:PW,p_key:'contact_whatsapp',p_value:$('#sWa').value.replace(/[^0-9]/g,'')});
+    await rpc('admin_set_config',{p_pw:PW,p_key:'price_text',p_value:$('#sPrice').value.trim()});
+    toast('تم حفظ الإعدادات ✅');
+  }catch(e){toast('خطأ: '+e.message)}
+};
+$('#chPw').onclick=async()=>{
+  const n=$('#newPw').value;if(n.length<10){toast('كلمة المرور قصيرة');return}
+  try{await rpc('admin_change_password',{p_pw:PW,p_new:n});PW=n;sessionStorage.setItem('luna-admin',n);$('#newPw').value='';toast('تم تغيير كلمة المرور ✅')}catch(e){toast('خطأ: '+e.message)}
+};
+(async()=>{if(PW){try{if(await login(PW))return}catch(e){}}$('#login').hidden=false})();
+</script>
+</body>
+</html>
